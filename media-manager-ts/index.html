@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Media Manager</title>
+  <link rel="icon" href="/favicon-32x32.png" type="image/png">
+  <link rel="stylesheet" type="text/css" href="app.css">
+</head>
+<body id="mediaManager">
+
+<h1>Media Manager</h1>
+
+<h2>Book collections</h2>
+
+<div class="collectionContainerGroup">
+  <div class="containerGroup">
+    <div class="container">
+      <h3>New collection</h3>
+      <form id="newBookCollection" action="#">
+        <input id="newBookCollectionName" type="text" title="Name" placeholder="Name" required>
+        <input type="button" value="Create" onclick="mediaManagerController.createBookCollection();"/>
+      </form>
+    </div>
+    <div class="container">
+      <h3>Tools</h3>
+      <form action="#">
+        <input type="button" value="Reload collections" onclick="mediaManagerController.reloadBookCollections();"/>
+      </form>
+    </div>
+  </div>
+
+  <div id="bookCollections" class="containerGroup">
+  </div>
+</div>
+
+<hr>
+
+<!-- TODO: Movie collections (bonus exercise) -->
+
+<script type="module" src="./app.ts"></script>
+
+</body>
+</html>

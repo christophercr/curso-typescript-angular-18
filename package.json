@@ -1,0 +1,45 @@
+{
+  "name": "curso-typescript-angular-18",
+  "version": "1.0.0",
+  "description": "Repo del curso Introducción a Typescript y Desarrollo Web con Angular 18",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "ts-node": "node --loader ts-node/esm",
+    "dev": "vite",
+    "compile": "tsc",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "watch": "tsc --watch",
+    "dev:app": "cd ./media-manager-ts && vite",
+    "compile:app": "tsc -p ./media-manager-ts",
+    "build:app": "tsc -p ./media-manager-ts && cd ./media-manager-ts && vite build",
+    "preview:app": "cd ./media-manager-ts && vite preview",
+    "watch:app": "tsc -p ./media-manager-ts --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christophercr/curso-typescript-angular-18.git"
+  },
+  "keywords": [
+    "typescript",
+    "exercises"
+  ],
+  "author": "Christopher Cortes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/christophercr/curso-typescript-angular-18/issues"
+  },
+  "homepage": "https://github.com/christophercr/curso-typescript-angular-18#readme",
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "localforage": "^1.10.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "20.16.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.3"
+  }
+}
