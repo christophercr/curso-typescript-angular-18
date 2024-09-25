@@ -142,11 +142,27 @@ export function exercise4_4() {
     fly(height: number): void;
   }
 
+  class Anfibio implements IAnfibio {
+    altura: number;
+    peso: number;
+    swim(depth: number): void;
+  }
+
+  interface BirdLike extends Swimmer, EggLayer {
+    
+  }
+
   interface Swimmer {
+    altura: number;
+    peso: number;
     swim(depth: number): void;
   }
 
   // añade alias de tipo aquí
+  // type BirdLike = Flyer & EggLayer;
+  type FishLike = Swimmer & EggLayer;
+  type Custom = IAnfibio & Swimmer;
+  
 
   class Bird implements BirdLike {
     constructor(public species: string) {
@@ -174,20 +190,26 @@ export function exercise4_4() {
     }
   }
 
+  type Animal = Fish | Bird;
+
   function getRandomAnimal() {
-    const animals = [
+    const animals: Animal[] = [
       new Bird('puffin'),
       new Bird('kittiwake'),
       new Fish('sea robin'),
-      new Fish('leafy seadragon'),
+      {nombre: 'dfd'}
     ];
 
     return animals[Math.floor(Math.random() * animals.length)];
   }
 
   function interrogateAnimal(animal = getRandomAnimal()) {
-    animal.swim(10); // call only if it is a fish
-    animal.fly(10); // call only if it is a bird
+    if (animal instanceof Fish) {
+       animal.swim(10); // call only if it is a fish
+    }
+    if (animal instanceof Bird) {
+       animal.fly(10); // call only if it is a bird
+    }
 
     return animal.species;
   }

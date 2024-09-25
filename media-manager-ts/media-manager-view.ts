@@ -32,24 +32,32 @@ export class HTMLMediaManagerView implements MediaManagerView {
   private readonly _genreOptions: string = "";
 
   constructor() {
-    this._newBookCollectionForm = document.getElementById('newBookCollection');
-    this._newBookCollectionName = document.getElementById('newBookCollectionName');
-    this._bookCollectionsContainer = document.getElementById("bookCollections");
+    const newBookCollectionForm = document.querySelector<HTMLFormElement>('#newBookCollection');
+    const newBookCollectionName = document.querySelector<HTMLInputElement>('#newBookCollectionName');
+    const bookCollectionsContainer = document.querySelector<HTMLDivElement>("#bookCollections");
 
-    if (!this._newBookCollectionForm) {
+    if (!newBookCollectionForm) {
       throw new Error("Could not initialize the view. The 'newBookCollection' element id was not found. Was the template changed?");
     }
 
-    if (!this._newBookCollectionName) {
+    this._newBookCollectionForm = newBookCollectionForm;
+
+    if (!newBookCollectionName) {
       throw new Error("Could not initialize the view. The 'newBookCollectionName' element id was not found. Was the template changed?");
     }
+    this._newBookCollectionName = newBookCollectionName;
+    
 
-    if (!this._bookCollectionsContainer) {
+    if (!bookCollectionsContainer) {
       throw new Error("Could not initialize the view. The 'bookCollections' element id was not found. Was the template changed?");
     }
 
+    this._bookCollectionsContainer = bookCollectionsContainer;
+
+    let prueba = Genre;
+
     for (let genreKey in Genre) {
-      this._genreOptions += `<option value="${genreKey}">${Genre[genreKey]}</option>">`;
+      this._genreOptions += `<option value="${genreKey}">${Genre[genreKey as keyof typeof Genre]}</option>">`;
     }
   }
 
@@ -179,7 +187,7 @@ export class HTMLMediaManagerView implements MediaManagerView {
     alert(errorMessage); // mala experiencia de usuario, pero ignoremos esto por ahora
   }
 
-  getNewBookDetails(collectionIdentifier: string): { error: string, book: Book } {
+  getNewBookDetails(collectionIdentifier: string): { error?: string, book?: Book } {
     if (!collectionIdentifier) {
       // lanzamos este porque significa que hay un error!
       throw new Error("The collection identifier must be provided!");
@@ -202,29 +210,29 @@ export class HTMLMediaManagerView implements MediaManagerView {
 
     // de aquí en adelante, no es necesario verificar la validez de los campos específicos del formulario
     // solo necesitamos verificar si se pueden encontrar los campos
-    const newBookNameField = document.getElementById(`newBookName-${collectionIdentifier}`);
+    const newBookNameField = document.querySelector<HTMLInputElement>(`#newBookName-${collectionIdentifier}`);
     if (!newBookNameField) {
       throw new Error("The new book form's name input was not found! Did the template change?");
     }
-    const newBookAuthorField = document.getElementById(`newBookAuthor-${collectionIdentifier}`);
+    const newBookAuthorField = document.querySelector<HTMLInputElement>(`#newBookAuthor-${collectionIdentifier}`);
     if (!newBookAuthorField) {
       throw new Error("The new book form's author input was not found! Did the template change?");
     }
-    const newBookGenreSelect = document.getElementById(`newBookGenre-${collectionIdentifier}`) as HTMLSelectElement;
+    const newBookGenreSelect = document.querySelector<HTMLSelectElement>(`#newBookGenre-${collectionIdentifier}`);
     if (!newBookGenreSelect) {
       throw new Error("The new book form's genre select was not found! Did the template change?");
     }
-    const newBookPagesField = document.getElementById(`newBookPages-${collectionIdentifier}`) as HTMLInputElement;
+    const newBookPagesField = document.querySelector<HTMLInputElement>(`#newBookPages-${collectionIdentifier}`);
     if (!newBookPagesField) {
       throw new Error("The new book form's page input was not found! Did the template change?");
     }
 
     // opcionales
-    const newBookPictureField = document.getElementById(`newBookPicture-${collectionIdentifier}`) as HTMLInputElement;
+    const newBookPictureField = document.querySelector<HTMLInputElement>(`#newBookPicture-${collectionIdentifier}`);
     if (!newBookPictureField) {
       throw new Error("The new book form's picture input was not found! Did the template change?");
     }
-    const newBookDescriptionField = document.getElementById(`newBookDescription-${collectionIdentifier}`) as HTMLTextAreaElement;
+    const newBookDescriptionField = document.querySelector<HTMLTextAreaElement>(`#newBookDescription-${collectionIdentifier}`);
     if (!newBookDescriptionField) {
       throw new Error("The new book form's description input was not found! Did the template change?");
     }

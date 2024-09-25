@@ -1,4 +1,4 @@
-export const enum Genre {
+export enum Genre {
   Horror = "Horror",
   Fantastic = "Fantastic",
   Thriller = "Thriller",
