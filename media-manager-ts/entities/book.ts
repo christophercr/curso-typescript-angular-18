@@ -15,6 +15,7 @@ export class Book extends Media {
     numberOfPages: number,
     identifier?: string
   ) {
+    super(name, description, pictureLocation, genre, identifier);
     this._numberOfPages = numberOfPages;
     this._author = author;
   }

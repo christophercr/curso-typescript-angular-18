@@ -4,16 +4,16 @@ import {Media} from "../entities/media";
 import {MediaCollection} from "../entities/media-collection";
 
 export interface MediaService<T extends Media> {
-  loadMediaCollection(identifier: string): Promise<MediaCollection<unknown>>
+  loadMediaCollection(identifier: string): Promise<MediaCollection<T>>
 
   saveMediaCollection(collection: Readonly<MediaCollection<T>>): Promise<void>
 
-  getMediaCollectionIdentifiersList(): Promise<any>
+  getMediaCollectionIdentifiersList(): Promise<string[]>
 
   removeMediaCollection(identifier: string): Promise<void>
 }
 
-export class MediaServiceImpl<T> implements MediaService<T> {
+export class MediaServiceImpl<T extends Media> implements MediaService<T> {
   private readonly _store: LocalForage;
 
   constructor(private _type: Function) {
@@ -29,7 +29,7 @@ export class MediaServiceImpl<T> implements MediaService<T> {
     });
   }
 
-  loadMediaCollection(identifier: string): Promise<MediaCollection<unknown>> {
+  loadMediaCollection(identifier: string): Promise<MediaCollection<T>> {
     console.log(`Trying to load media collection with the following identifier: ${identifier}`);
     return new Promise<MediaCollection<T>>((resolve, reject) => {
       this._store.getItem(identifier)
@@ -47,7 +47,7 @@ export class MediaServiceImpl<T> implements MediaService<T> {
     });
   }
 
-  saveMediaCollection(collection: Readonly<MediaCollection<T>>) {
+  saveMediaCollection(collection: Readonly<MediaCollection<T>>): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (!collection) {
         reject(new Error("The list cannot be null or undefined!"));
@@ -70,7 +70,7 @@ export class MediaServiceImpl<T> implements MediaService<T> {
     });
   }
 
-  getMediaCollectionIdentifiersList() {
+  getMediaCollectionIdentifiersList(): Promise<string[]> {
     return new Promise<string[]>((resolve, reject) => {
       console.log("Retrieving the list of media collection identifiers");
       this._store.keys().then(keys => {
