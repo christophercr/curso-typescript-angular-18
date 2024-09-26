@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+button[type="button"] {
+  background-color: cornflowerblue;
+
+  &.is-hovered {
+    background-color: red;
+  }
+
+  &:disabled {
+    background-color: grey;
+  }
+}

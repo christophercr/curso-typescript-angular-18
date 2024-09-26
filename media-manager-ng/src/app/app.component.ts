@@ -28,4 +28,8 @@ export class AppComponent {
   public onCollectionReload(data: unknown) {
     console.log('AppComponent: Collection reload event received', data);
   }
+
+  public onButtonHovered(isHovered: boolean) {
+    console.log('button is hovered', isHovered);
+  }
 }
