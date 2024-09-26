@@ -1,7 +1,7 @@
-<button type="button" (click)="toggleComponent()">Toggle Component</button>
+<button type="button" (click)="toggleComponent()" [class]="prueba[0]">Toggle Component</button>
 
 @if (showComponent) {
-  <app-new-media-collection [name]="'awesome name'" (reloadClicked)="onCollectionReload($event)"></app-new-media-collection>
+  <app-new-media-collection [inputName]="prueba" (reloadClicked)="onCollectionReload($event)"></app-new-media-collection>
 } @else {
   <div>no component to show</div>
 }

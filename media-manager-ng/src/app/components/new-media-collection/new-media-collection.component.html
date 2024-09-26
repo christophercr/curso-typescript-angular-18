@@ -1,10 +1,10 @@
 <div class="container">
     <h3>New collection</h3>
     <form id="newBookCollection" action="#">
-      <input id="newBookCollectionName" type="text" title="Name" placeholder="Name" required>
+      <input id="newBookCollectionName" type="text" name="collection-name" title="Name" placeholder="Name" required [(ngModel)]="inputName">
       <button type="button" (click)="createBookCollection()">Create</button>
       <p>
-        <span>The new collection will be named: {{ name }}</span>
+        <span>The new collection will be named: {{ inputName }}</span>
       </p>
     </form>
   </div>
