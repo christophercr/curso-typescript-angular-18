@@ -14,11 +14,11 @@ import { IfViewportDirective } from './directives/if-viewport.directive';
 export class AppComponent {
   title = 'media-manager-ng';
   showComponent = true;
-  prueba = ['valor inicial desde app component']
+  prueba = 'valor inicial desde app component'
 
   constructor() {
     setTimeout(() => {
-      this.prueba = ['otro valor dinamico'];
+      this.prueba = 'otro valor dinamico';
     }, 3000);
   }
 

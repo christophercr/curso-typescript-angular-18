@@ -4,7 +4,7 @@
       <input id="newBookCollectionName" type="text" name="collection-name" title="Name" placeholder="Name" required [(ngModel)]="inputName">
       <button type="button" (click)="createBookCollection()">Create</button>
       <p>
-        <span>The new collection will be named: {{ inputName }}</span>
+        <span>The new collection will be named: {{ inputName | formatText : 'upper-first' }}</span>
       </p>
     </form>
   </div>
