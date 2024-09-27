@@ -4,7 +4,7 @@
 <!--
 <div *appIfViewport="['Medium', 'Large']; else: noComponent"></div>
 -->
-<div *appIfViewport="'Medium'; else: noComponent">
+<div *appIfViewport="'Medium'; else noComponent">
   <p>Showing content only when the viewport matches</p>
 </div>
 
@@ -17,3 +17,26 @@
 } @else {
   <div>no component to show</div>
 }
+
+<h2>Pipes built-in de Angular</h2>
+
+<p> Formatted text: "{{ someText | formatText: "upper-first" }}" </p>
+<p> Another formatted text: "{{ someText | lowercase }}" </p>
+<p> Another formatted text: "{{ someText | uppercase }}" </p>
+<p> and date {{ currentDate | date: "MMMM dd, yyyy hh:mm a" : undefined : "es-ES" | titlecase }} </p>
+<p> and price {{ 250.46 | currency: "EUR" : "symbol" : "1.1-1" : "es-ES" }} with {{ discount | percent: "1.1-1" : "es-ES" }} discount </p>
+<p> Current timestamp in minutes: {{ currentTimeInMinutes | number: "1.1-4" : "es-ES" }} </p>
+<p> JSON object: {{ jsonObject | json }} </p>
+<p> Slicing an array: {{ animals | slice: 0 : 4 }} </p>
+<p>
+  Display object key-values:
+  @let keyValuePairs = jsonObject | keyvalue;
+  @for (item of keyValuePairs; track $index) {
+    <div>{{ item.key }}:{{ item.value | json }}</div>
+  }
+</p>
+<p>
+  <ng-container *ngFor="let item of keyValuePairs; trackBy: trackByFn">
+    <div>{{ item.key }}:{{ item.value | json }}</div>
+  </ng-container>
+</p>
