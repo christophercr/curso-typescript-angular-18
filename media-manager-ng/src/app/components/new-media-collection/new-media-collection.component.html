@@ -1,16 +1,19 @@
 <div class="container">
-    <h3>New collection</h3>
-    <form id="newBookCollection" action="#">
-      <input id="newBookCollectionName" type="text" name="collection-name" title="Name" placeholder="Name" required [(ngModel)]="inputName">
-      <button type="button" (click)="createBookCollection()">Create</button>
-      <p>
-        <span>The new collection will be named: {{ inputName | formatText : 'upper-first' }}</span>
-      </p>
-    </form>
-  </div>
-  <div class="container">
-    <h3>Tools</h3>
-    <form action="#">
-      <button type="button" (click)="reloadBookCollections()">Reload collections</button>
-    </form>
-  </div>
+  <h3>New collection</h3>
+  <form id="newBookCollection" action="#">
+    <input id="newBookCollectionName" type="text" name="collection-name" title="Name" placeholder="Name" [formControl]="collectionName" />
+    <button type="button" (click)="createBookCollection()" [disabled]="collectionName.invalid">Create</button>
+    <p>
+      <span>The new collection will be named: {{ collectionName.value | formatText: "upper-first" }}</span>
+    </p>
+    <p>
+      <span>Form errors: {{ collectionName.errors | json }}</span>
+    </p>
+  </form>
+</div>
+<div class="container">
+  <h3>Tools</h3>
+  <form action="#">
+    <button type="button" (click)="reloadBookCollections()">Reload collections</button>
+  </form>
+</div>
