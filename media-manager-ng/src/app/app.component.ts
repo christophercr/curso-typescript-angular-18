@@ -17,6 +17,7 @@ import {
   TitleCasePipe,
   UpperCasePipe,
 } from '@angular/common';
+import { NewBookComponent } from './components/new-book/new-book.component';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,7 @@ import {
     NgFor,
     LowerCasePipe,
     UpperCasePipe,
+    NewBookComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
