@@ -39,3 +39,5 @@ export interface MediaStorageService {
 
   getAllItems<T extends Media>(deserializerFn: DeserializationFn<T>, mediaType: string): Promise<MediaCollection<T>[]>;
 }
+
+export const MEDIA_STORAGE_SERVICE = new InjectionToken<MediaStorageService>('MediaStorageService');

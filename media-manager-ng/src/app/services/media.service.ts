@@ -1,13 +1,11 @@
 import { plainToClassFromExist } from 'class-transformer';
 import { MediaCollection } from '../models/media-collection.model';
 import type { Media } from '../models/media.model';
-import type { MediaService, TypeOfChange } from '../models/media-service.model';
-// import { MediaLocalStorageService } from './media-local-storage.service';
-import { MediaHttpStorageService } from './media-http-storage.service';
+import { MEDIA_STORAGE_SERVICE, type MediaService, type TypeOfChange } from '../models/media-service.model';
 import { inject } from '@angular/core';
 
 export class MediaServiceImpl<T extends Media> implements MediaService<T> {
-  private readonly _mediaStorageService = inject(MediaHttpStorageService);
+  private readonly _mediaStorageService = inject(MEDIA_STORAGE_SERVICE);
 
   constructor(private _type: Function) {
     console.log(`Initializing media service for ${_type.name}`);
