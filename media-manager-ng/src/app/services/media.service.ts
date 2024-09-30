@@ -103,4 +103,12 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
         });
     });
   }
+
+  displayErrorMessage(errorMessage: string) {
+    if (!errorMessage) {
+      throw new Error("An error message must be provided!");
+    }
+    alert(errorMessage); // mala experiencia de usuario, pero ignoremos esto por ahora
+   }
+   
 }

@@ -18,6 +18,7 @@ import {
   UpperCasePipe,
 } from '@angular/common';
 import { NewBookComponent } from './components/new-book/new-book.component';
+import { BooksPageComponent } from './pages/books-page/books-page.component';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +41,7 @@ import { NewBookComponent } from './components/new-book/new-book.component';
     LowerCasePipe,
     UpperCasePipe,
     NewBookComponent,
+    BooksPageComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -48,13 +50,6 @@ export class AppComponent {
   title = 'media-manager-ng';
   showComponent = true;
   prueba = 'valor inicial desde app component';
-
-  public someText = 'this is a test';
-  public currentDate = new Date();
-  public currentTimeInMinutes = Date.now() / 1000 / 60;
-  public discount = 0.205;
-  public jsonObject = { foo: 'bar', baz: 'qux', nested: { xyz: 3, numbers: [1, 2, 3, 4, 5] } };
-  public animals = ['pangolin', 'aardvark', 'echidna', 'binturong'];
 
   constructor() {
     setTimeout(() => {
@@ -72,9 +67,5 @@ export class AppComponent {
 
   public onButtonHovered(isHovered: boolean) {
     console.log('button is hovered', isHovered);
-  }
-
-  public trackByFn(index: number, _item: unknown) {
-    return index;
   }
 }
