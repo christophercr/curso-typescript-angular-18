@@ -3,6 +3,7 @@ import { MediaCollection } from '../models/media-collection.model';
 import type { Media } from '../models/media.model';
 import { MEDIA_STORAGE_SERVICE, type MediaService, type TypeOfChange } from '../models/media-service.model';
 import { inject } from '@angular/core';
+import { catchError, lastValueFrom, map } from 'rxjs';
 
 export class MediaServiceImpl<T extends Media> implements MediaService<T> {
   private readonly _mediaStorageService = inject(MEDIA_STORAGE_SERVICE);
@@ -18,7 +19,7 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
   loadMediaCollection(identifier: string): Promise<MediaCollection<T>> {
     console.log(`Trying to load media collection with the following identifier: ${identifier}`);
 
-    return this._mediaStorageService.getItem(identifier, this.deserializeCollection, this._type.name);
+    return lastValueFrom(this._mediaStorageService.getItem(identifier, this.deserializeCollection, this._type.name));
   }
 
   saveMediaCollection(
@@ -32,22 +33,22 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
     }
 
     console.log(`Saving media collection with the following name ${collection.name}`);
-    return this._mediaStorageService.saveItem(collection, this._type.name, typeOfChange, collectionItemOrId, collectionId);
+    return lastValueFrom(this._mediaStorageService.saveItem(collection, this._type.name, typeOfChange, collectionItemOrId, collectionId));
   }
 
   getMediaCollectionIdentifiersList(): Promise<string[]> {
-    return new Promise<string[]>((resolve, reject) => {
-      console.log('Retrieving the list of media collection identifiers');
+    console.log('Retrieving the list of media collection identifiers');
 
-      this._mediaStorageService
-        .getAllItems(this.deserializeCollection, this._type.name)
-        .then((collections) => {
-          resolve(collections.map((collection) => collection.identifier));
-        })
-        .catch((err) => {
-          reject(err); // dejar pasar el error
-        });
-    });
+    return lastValueFrom(
+      this._mediaStorageService.getAllItems(this.deserializeCollection, this._type.name).pipe(
+        map((collections) => {
+          return collections.map((collection) => collection.identifier);
+        }),
+        catchError((err) => {
+          throw new Error(err); // dejar pasar el error
+        }),
+      ),
+    );
   }
 
   removeMediaCollection(identifier: string) {
@@ -57,7 +58,7 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
 
     console.log(`Removing media collection with the following identifier ${identifier}`);
 
-    return this._mediaStorageService.deleteItem(identifier, this._type.name);
+    return lastValueFrom(this._mediaStorageService.deleteItem(identifier, this._type.name));
   }
 
   displayErrorMessage(errorMessage: string) {

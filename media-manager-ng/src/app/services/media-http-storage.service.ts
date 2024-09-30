@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import type { MediaCollection } from '../models/media-collection.model';
 import { instanceToPlain } from 'class-transformer';
 import type { Media } from '../models/media.model';
-import { catchError, lastValueFrom, map, tap } from 'rxjs';
+import { catchError, lastValueFrom, map, of, tap, type Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,23 +22,21 @@ export class MediaHttpStorageService implements MediaStorageService {
     typeOfChange: TypeOfChange = 'create-collection',
     collectionItemOrId?: T | string,
     collectionId?: string,
-  ): Promise<void> {
+  ): Observable<void> {
     let endpoint = 'collections';
 
     if (typeOfChange === 'create-collection') {
       const serializedVersion = instanceToPlain(collection, { excludePrefixes: ['_'] });
       console.log('Serialized version: ', serializedVersion);
 
-      return lastValueFrom(
-        this._http.post<void>(`http://localhost:3000/${endpoint}`, serializedVersion).pipe(
-          tap((value) => {
-            console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
-          }),
-          catchError((err) => {
-            console.error(`Failed to save the ${collection.name} collection with identifier ${collection.identifier}. Error: ${err}`);
-            throw new Error(err);
-          }),
-        ),
+      return this._http.post<void>(`http://localhost:3000/${endpoint}`, serializedVersion).pipe(
+        tap((value) => {
+          console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
+        }),
+        catchError((err) => {
+          console.error(`Failed to save the ${collection.name} collection with identifier ${collection.identifier}. Error: ${err}`);
+          throw new Error(err);
+        }),
       );
     }
 
@@ -48,108 +46,98 @@ export class MediaHttpStorageService implements MediaStorageService {
       serializedVersion['collectionId'] = collectionId;
       console.log('Serialized version: ', serializedVersion);
 
-      return lastValueFrom(
-        this._http.post<void>(`http://localhost:3000/${endpoint}`, serializedVersion).pipe(
-          tap((value) => {
-            console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
-          }),
-          catchError((err) => {
-            console.error(`Failed to save the ${collection.name} collection with identifier ${collection.identifier}. Error: ${err}`);
-            throw new Error(err);
-          }),
-        ),
+      return this._http.post<void>(`http://localhost:3000/${endpoint}`, serializedVersion).pipe(
+        tap((value) => {
+          console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
+        }),
+        catchError((err) => {
+          console.error(`Failed to save the ${collection.name} collection with identifier ${collection.identifier}. Error: ${err}`);
+          throw new Error(err);
+        }),
       );
     }
 
     if (typeOfChange === 'remove-collection-item' && collectionItemOrId) {
       endpoint = `${mediaType.toLowerCase()}s`;
 
-      return lastValueFrom(
-        this._http.delete<void>(`http://localhost:3000/${endpoint}/${collectionItemOrId}`).pipe(
-          tap((value) => {
-            console.log(
-              `Saved the item with id ${collectionItemOrId} successfully from collection with identifier ${collection.identifier}!`,
-            );
-          }),
-          catchError((err) => {
-            console.error(
-              `Failed to remove the item with id ${collection.name} from collection with identifier ${collection.identifier}. Error: ${err}`,
-            );
-            throw new Error(err);
-          }),
-        ),
+      return this._http.delete<void>(`http://localhost:3000/${endpoint}/${collectionItemOrId}`).pipe(
+        tap((value) => {
+          console.log(
+            `Saved the item with id ${collectionItemOrId} successfully from collection with identifier ${collection.identifier}!`,
+          );
+        }),
+        catchError((err) => {
+          console.error(
+            `Failed to remove the item with id ${collection.name} from collection with identifier ${collection.identifier}. Error: ${err}`,
+          );
+          throw new Error(err);
+        }),
       );
     }
 
-    return Promise.resolve();
+    return of();
   }
 
-  getItem<T extends Media>(identifier: string, deserializerFn: DeserializationFn<T>, mediaType: string): Promise<MediaCollection<T>> {
+  getItem<T extends Media>(identifier: string, deserializerFn: DeserializationFn<T>, mediaType: string): Observable<MediaCollection<T>> {
     const endpoint = `collections/${identifier}?_embed=${mediaType.toLowerCase()}s`;
-    return lastValueFrom(
-      this._http.get(`http://localhost:3000/${endpoint}`).pipe(
-        map((value) => {
-          console.log('Found the collection: ', value);
+    return this._http.get(`http://localhost:3000/${endpoint}`).pipe(
+      map((value) => {
+        console.log('Found the collection: ', value);
 
-          const normalizedCollectionItems = (value as any)['books'].map((item: any) => {
-            const { name, description, pictureLocation, genre, author, numberOfPages, id: identifier } = item; // TODO: definir interface para respuesta de API
-            return { name, description, pictureLocation, genre, author, numberOfPages, identifier };
-            // return { ...item, identifier: item.id }; // TODO: definir interface para respuesta de API
-          });
-          const { id: identifier, name, type } = value as any; // TODO: definir interface para respuesta de API
-          const normalizedCollection = { identifier, name, type, collection: normalizedCollectionItems };
+        const normalizedCollectionItems = (value as any)['books'].map((item: any) => {
+          const { name, description, pictureLocation, genre, author, numberOfPages, id: identifier } = item; // TODO: definir interface para respuesta de API
+          return { name, description, pictureLocation, genre, author, numberOfPages, identifier };
+          // return { ...item, identifier: item.id }; // TODO: definir interface para respuesta de API
+        });
+        const { id: identifier, name, type } = value as any; // TODO: definir interface para respuesta de API
+        const normalizedCollection = { identifier, name, type, collection: normalizedCollectionItems };
 
-          // const normalizedCollection = { ...value, identifier: (value as any)['id'], collection: normalizedCollectionItems }; // TODO: definir interface para respuesta de API
-          const retrievedCollection = deserializerFn(normalizedCollection);
+        // const normalizedCollection = { ...value, identifier: (value as any)['id'], collection: normalizedCollectionItems }; // TODO: definir interface para respuesta de API
+        const retrievedCollection = deserializerFn(normalizedCollection);
 
-          console.log('Retrieved collection: ', retrievedCollection);
-          return retrievedCollection;
-        }),
-        catchError((err) => {
-          throw new Error(err); // dejar pasar el error
-        }),
-      ),
+        console.log('Retrieved collection: ', retrievedCollection);
+        return retrievedCollection;
+      }),
+      catchError((err) => {
+        throw new Error(err); // dejar pasar el error
+      }),
     );
   }
 
-  getAllItems<T extends Media>(deserializerFn: DeserializationFn<T>, mediaType: string): Promise<MediaCollection<T>[]> {
+  getAllItems<T extends Media>(deserializerFn: DeserializationFn<T>, mediaType: string): Observable<MediaCollection<T>[]> {
     const endpoint = `collections?type=${mediaType.toLowerCase()}`;
-    return lastValueFrom(
-      this._http.get<any[]>(`http://localhost:3000/${endpoint}`).pipe(
-        map((collectionsArray) => {
-          const retrievedCollections = collectionsArray.map((item) => {
-            // const {id: identifier, name, type} = item; // TODO: definir interface para 'value'
-            // const normalizedCollection = {identifier, name, type};
-            const normalizedCollection = { ...item, identifier: item.id }; // TODO: definir interface para respuesta de API
-            return deserializerFn(normalizedCollection);
-          });
+    return this._http.get<any[]>(`http://localhost:3000/${endpoint}`).pipe(
+      map((collectionsArray) => {
+        const retrievedCollections = collectionsArray.map((item) => {
+          // const {id: identifier, name, type} = item; // TODO: definir interface para 'value'
+          // const normalizedCollection = {identifier, name, type};
+          const normalizedCollection = { ...item, identifier: item.id }; // TODO: definir interface para respuesta de API
+          return deserializerFn(normalizedCollection);
+        });
 
-          console.log('Retrieved collection: ', retrievedCollections);
-          return retrievedCollections;
-        }),
-        catchError((err) => {
-          console.error('Failed to retrieve the list of media collections. Error: ', err);
-          throw new Error(err); // dejar pasar el error
-        }),
-      ),
+        console.log('Retrieved collection: ', retrievedCollections);
+        return retrievedCollections;
+      }),
+      catchError((err) => {
+        console.error('Failed to retrieve the list of media collections. Error: ', err);
+        throw new Error(err); // dejar pasar el error
+      }),
     );
   }
 
   /**
    * Deletes a collection from DB
    */
-  deleteItem(identifier: string, mediaType: string): Promise<void> {
+  deleteItem(identifier: string, mediaType: string): Observable<void> {
     const endpoint = `collections`;
-    return lastValueFrom(
-      this._http.delete<void>(`http://localhost:3000/${endpoint}/${identifier}`).pipe(
-        tap(() => {
-          console.log(`Removed the ${identifier} collection successfully!`);
-        }),
-        catchError((err) => {
-          console.error(`Failed to removed the ${identifier} collection`);
-          throw new Error(err);
-        }),
-      ),
+    return this._http.delete<void>(`http://localhost:3000/${endpoint}/${identifier}`).pipe(
+      tap(() => {
+        console.log(`Removed the ${identifier} collection successfully!`);
+      }),
+      catchError((err) => {
+        console.error(`Failed to removed the ${identifier} collection`);
+        throw new Error(err);
+      }),
     );
   }
 }
