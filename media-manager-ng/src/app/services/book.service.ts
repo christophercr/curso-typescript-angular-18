@@ -79,7 +79,7 @@ export class BookService extends MediaServiceImpl<Book> {
 
     existingCollection.addMedia(book);
 
-    this.saveMediaCollection(existingCollection)
+    this.saveMediaCollection(existingCollection, 'create-collection-item', book, collectionIdentifier)
       .then(() => {
         console.log(`Book collection called "${existingCollection.name}" updated successfully.`);
       })
@@ -107,7 +107,7 @@ export class BookService extends MediaServiceImpl<Book> {
 
     existingCollection.removeMedia(bookIdentifier);
 
-    this.saveMediaCollection(existingCollection)
+    this.saveMediaCollection(existingCollection, 'remove-collection-item', bookIdentifier)
       .then(() => {
         console.log(`Book collection called "${existingCollection.name}" updated successfully.`);
       })
