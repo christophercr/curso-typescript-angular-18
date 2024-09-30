@@ -12,6 +12,7 @@ import type { Book } from '../../models/book.model';
   imports: [ReactiveFormsModule, NewBookComponent, BookListComponent, KeyValuePipe],
   templateUrl: './books-page.component.html',
   styleUrl: './books-page.component.css',
+  providers: [BookService],
 })
 export class BooksPageComponent implements OnInit {
   private readonly _bookService = inject(BookService);

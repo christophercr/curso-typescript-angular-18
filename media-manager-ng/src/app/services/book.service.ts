@@ -4,7 +4,7 @@ import { Book } from '../models/book.model';
 import { MediaCollection } from '../models/media-collection.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: null, // porque lo haremos un servicio a nivel de componente (del BooksPage component específicamente)
 })
 export class BookService extends MediaServiceImpl<Book> {
   private _bookCollections: Map<string, MediaCollection<Book>> = new Map<string, MediaCollection<Book>>();
