@@ -14,6 +14,7 @@ export interface MediaService<T extends Media> {
     collection: Readonly<MediaCollection<T>>,
     typeOfChange?: TypeOfChange,
     collectionItemOrId?: T | string,
+    collectionId?: string,
   ): Promise<void>;
 
   getMediaCollectionIdentifiersList(): Promise<string[]>;
@@ -24,18 +25,17 @@ export interface MediaService<T extends Media> {
 }
 
 export interface MediaStorageService {
-  getItem<T extends Media>(getItem: string, deserializerFn: DeserializationFn<T>, mediaType: string): Observable<MediaCollection<T>>;
+  getItem<T extends Media>(getItem: string, deserializerFn: DeserializationFn<T>, mediaType: string): Promise<MediaCollection<T>>;
 
   saveItem<T extends Media>(
     collection: Readonly<MediaCollection<T>>,
     mediaType: string,
     typeOfChange?: TypeOfChange,
     collectionItemOrId?: T | string,
-  ): Observable<void>;
+    collectionId?: string,
+  ): Promise<void>;
 
-  deleteItem(identifier: string, mediaType: string): Observable<void>;
+  deleteItem(identifier: string, mediaType: string): Promise<void>;
 
-  getAllItems<T extends Media>(deserializerFn: DeserializationFn<T>, mediaType: string): Observable<MediaCollection<T>[]>;
+  getAllItems<T extends Media>(deserializerFn: DeserializationFn<T>, mediaType: string): Promise<MediaCollection<T>[]>;
 }
-
-export const MEDIA_STORAGE_SERVICE = new InjectionToken<MediaStorageService>('MediaStorageService');
