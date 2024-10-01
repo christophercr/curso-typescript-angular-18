@@ -1,17 +1,23 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Genre } from '../../constants/genre.constants';
 import { Book } from '../../models/book.model';
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, KeyValuePipe } from '@angular/common';
+import { BookService } from '../../services/book.service';
+import { delay, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-new-book',
   standalone: true,
-  imports: [ReactiveFormsModule, JsonPipe],
+  imports: [ReactiveFormsModule, JsonPipe, KeyValuePipe],
   templateUrl: './new-book.component.html',
   styleUrl: './new-book.component.css',
 })
 export class NewBookComponent implements OnInit {
+  private readonly _bookService = inject(BookService);
+
+  public bookCollections = this._bookService.bookCollections;
+
   @Output()
   created: EventEmitter<Book> = new EventEmitter<Book>();
 
@@ -22,6 +28,7 @@ export class NewBookComponent implements OnInit {
     numberOfPages: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+$/)]),
     pictureLocation: new FormControl(''),
     description: new FormControl(''),
+    collection: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
   genres: string[] = [];
 
@@ -31,6 +38,24 @@ export class NewBookComponent implements OnInit {
     }
 
     this.myForm.controls.pictureLocation.disable();
+
+    // Por defecto selccionamos la primera colección
+    // Si el usuario lo decide, puede elegir la colección que quiera
+    of(true)
+      .pipe(
+        tap(() => {
+          this._bookService.reloadBookCollections();
+        }),
+        delay(500),
+        tap(() => {
+          this.bookCollections = this._bookService.bookCollections;
+          if (this.bookCollections.size > 0) {
+            const collections = Array.from(this.bookCollections.values());
+            this.myForm.controls.collection.setValue(collections[0].identifier);
+          }
+        }),
+      )
+      .subscribe();
 
     this.myForm.statusChanges.subscribe((status) => {
       console.log('myForm status changed: ', status);
@@ -59,6 +84,7 @@ export class NewBookComponent implements OnInit {
       );
 
       this.created.emit(bookToCreate);
+      this._bookService.createBook(this.myForm.controls.collection.value, bookToCreate);
       this.myForm.reset();
     }
   }
