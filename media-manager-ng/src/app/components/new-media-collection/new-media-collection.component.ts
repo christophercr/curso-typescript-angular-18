@@ -48,13 +48,16 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
   @Output()
   public reloadClicked = new EventEmitter<string>();
 
+  @Output()
+  public collectionCreated = new EventEmitter<string>();
+
   /*@ViewChild('nameInput')
   public nameInput: ElementRef<HTMLInputElement> | null = null;*/
 
   // private _cdRef = inject(ChangeDetectorRef);
   private _collectionNameValidator = inject(CollectionNameValidator);
 
-  public collectionName = new FormControl('inicio', {
+  public collectionName = new FormControl('', {
     nonNullable: true,
     validators: [
       // síncronos
@@ -101,6 +104,9 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
     if (!this.collectionName.valid) {
       console.warn('dato invalido', this.collectionName.value);
     }
+
+    this.collectionCreated.emit(this.collectionName.value);
+    this.collectionName.reset('');
   }
 
   public reloadBookCollections() {
@@ -116,12 +122,13 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
 
   private _resetInput() {
     console.log('Resetting the form...');
-    setTimeout(() => {
-      console.log('X secs delay...');
+    this.collectionName.reset()
+    //setTimeout(() => {
+      //console.log('X secs delay...');
       //this.inputName = 'default value';
       //this.collectionName.setValue('inicio')
-      this.collectionName.reset(); // reset() es más conveniente para que que los estados 'touched' y 'dirty' vuelvan a su estado inicial
+      //this.collectionName.reset(); // reset() es más conveniente para que que los estados 'touched' y 'dirty' vuelvan a su estado inicial
       //this._cdRef.markForCheck(); // ya no es necesario esto porque el FormControl se encarga de avisar a Angular de los cambios
-    }, 2000);
+    //}, 2000);
   }
 }

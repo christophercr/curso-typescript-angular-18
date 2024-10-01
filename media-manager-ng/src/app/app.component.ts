@@ -42,7 +42,7 @@ import { BooksPageComponent } from './pages/books-page/books-page.component';
     UpperCasePipe,
     NewBookComponent,
     BooksPageComponent,
-  ],
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
