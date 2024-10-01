@@ -4,7 +4,7 @@ import { Genre } from '../../constants/genre.constants';
 import { Book } from '../../models/book.model';
 import { JsonPipe, KeyValuePipe } from '@angular/common';
 import { BookService } from '../../services/book.service';
-import { delay, of, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-new-book',
@@ -15,6 +15,7 @@ import { delay, of, tap } from 'rxjs';
 })
 export class NewBookComponent implements OnInit {
   private readonly _bookService = inject(BookService);
+  private readonly _currentRoute = inject(ActivatedRoute);
 
   public bookCollections = this._bookService.bookCollections;
 
@@ -41,7 +42,7 @@ export class NewBookComponent implements OnInit {
 
     // Por defecto selccionamos la primera colección
     // Si el usuario lo decide, puede elegir la colección que quiera
-    of(true)
+    /*of(true)
       .pipe(
         tap(() => {
           this._bookService.reloadBookCollections();
@@ -55,7 +56,14 @@ export class NewBookComponent implements OnInit {
           }
         }),
       )
-      .subscribe();
+      .subscribe();*/
+
+    // Ahora podemos reemplazar el bloque de código de arriba porque ya podemos coger el listado de colecciones desde el resolver
+    this.bookCollections = this._currentRoute.snapshot.data['collections'];
+    if (this.bookCollections.size > 0) {
+      const collections = Array.from(this.bookCollections.values());
+      this.myForm.controls.collection.setValue(collections[0].identifier);
+    }
 
     this.myForm.statusChanges.subscribe((status) => {
       console.log('myForm status changed: ', status);

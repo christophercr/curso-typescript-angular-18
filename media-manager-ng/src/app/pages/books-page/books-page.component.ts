@@ -24,10 +24,11 @@ export class BooksPageComponent implements OnInit {
   private readonly _router = inject(Router);
   private readonly _currentRoute = inject(ActivatedRoute);
 
-  public bookCollections = this._bookService.bookCollections;
+  public bookCollections = this._currentRoute.snapshot.data['collections'];
 
   ngOnInit() {
-    this._bookService.reloadBookCollections();
+    // Ya no hace falta llamar al servicio para obtener el listado de colecciones. Ya tenemos esos datos disponibles gracias al resolver!
+    // this._bookService.reloadBookCollections();
   }
 
   createBookCollection(name: string): void {
