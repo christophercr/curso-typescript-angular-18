@@ -17,7 +17,7 @@ import { delay } from 'rxjs';
   imports: [ReactiveFormsModule, NewBookComponent, BookListComponent, KeyValuePipe, RouterLink, NewMediaCollectionComponent, RouterOutlet],
   templateUrl: './books-page.component.html',
   styleUrl: './books-page.component.css',
-  providers: [BookService],
+  providers: [],
 })
 export class BooksPageComponent implements OnInit {
   private readonly _bookService = inject(BookService);
