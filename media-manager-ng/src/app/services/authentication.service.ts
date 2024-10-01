@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import type { User } from '../models/user.model';
+import type { User, UserType } from '../models/user.model';
 import { map, type Observable } from 'rxjs';
 
 @Injectable({
@@ -15,9 +15,13 @@ export class AuthenticationService {
     return this._currentUser;
   }
 
-  simulateLogin(): Observable<User> {
+  simulateLogin(desiredUserType?: UserType): Observable<User> {
     return this._http.get<User[]>(`http://localhost:3000/users`).pipe(
       map((users) => {
+        if (desiredUserType) {
+          return users.find((user) => user.userType === desiredUserType) as User;
+        }
+
         this._currentUser = this._getRandomUser(users);
         console.log('Simulating user login => user:', this._currentUser);
         return this._currentUser;
