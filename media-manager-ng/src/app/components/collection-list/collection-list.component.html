@@ -1,0 +1,24 @@
+<h3>Book Colletions!</h3>
+
+@for (bookCollection of bookCollections | keyvalue; track bookCollection.value.identifier) {
+    <div class="containerGroup">
+      <div class="collection">
+        <h3 class="collectionName">{{ bookCollection.value.name }}</h3>
+        <div class="containerGroup">
+          <div class="collectionToolsContainer">
+            <h3>Tools</h3>
+            <form action="#">
+              <button type="button" (click)="removeBookCollection(bookCollection.key)">Remove collection</button>
+            </form>
+          </div>
+        </div>
+        <div class="containerGroup">
+          <app-book-list
+            class="container"
+            (removedBook)="removeBook(bookCollection.key, $event)"
+            [books]="bookCollection.value.collection.slice(0)"
+          ></app-book-list>
+        </div>
+      </div>
+    </div>
+  }

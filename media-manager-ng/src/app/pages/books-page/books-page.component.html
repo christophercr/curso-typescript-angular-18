@@ -1,38 +1,19 @@
 <h2>Book collections</h2>
-
-<div class="collectionContainerGroup">
-  <div class="containerGroup">
-    <app-new-media-collection (collectionCreated)="createBookCollection($event)" (reloadClicked)="reloadBookCollections()"></app-new-media-collection>
-    <div class="container">
-      <h3>Tools</h3>
-      <form action="#">
-        <button type="button" (click)="reloadBookCollections()">Reload collections</button>
-        <button type="button" routerLink="/">Go to homepage</button>
-      </form>
+<ul class="media-manager-options">
+  <li class="option">
+    <div>
+      <a (click)="changeView('collection-list')">Collections</a>
     </div>
-  </div>
-
-  @for (bookCollection of bookCollections | keyvalue; track bookCollection.value.identifier) {
-    <div class="containerGroup">
-      <div class="collection">
-        <h3 class="collectionName">{{ bookCollection.value.name }}</h3>
-        <div class="containerGroup">
-          <app-new-book class="container" (created)="createBook($event, bookCollection.key)"></app-new-book>
-          <div class="collectionToolsContainer">
-            <h3>Tools</h3>
-            <form action="#">
-              <button type="button" (click)="removeBookCollection(bookCollection.key)">Remove collection</button>
-            </form>
-          </div>
-        </div>
-        <div class="containerGroup">
-          <app-book-list
-            class="container"
-            (removedBook)="removeBook(bookCollection.key, $event)"
-            [books]="bookCollection.value.collection.slice(0)"
-          ></app-book-list>
-        </div>
-      </div>
+  </li>
+  <li class="option">
+    <div>
+      <a (click)="changeView('new-collection')">New Collection</a>
     </div>
-  }
-</div>
+  </li>
+  <li class="option">
+    <div>
+      <a (click)="changeView('new-book')">New Book</a>
+    </div>
+  </li></ul>
+
+<router-outlet (activate)="onRouteActivated($event)"></router-outlet>

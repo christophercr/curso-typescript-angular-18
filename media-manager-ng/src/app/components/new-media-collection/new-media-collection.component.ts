@@ -12,6 +12,7 @@ import {
 import { CollectionNameValidator } from '../../validators/collection-name.validator';
 import { JsonPipe } from '@angular/common';
 import { FormatTextPipe } from '../../pipes/format-text.pipe';
+import { BookService } from '../../services/book.service';
 
 export function invalidCharsValidator(regexToTest: RegExp): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -57,6 +58,8 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
   // private _cdRef = inject(ChangeDetectorRef);
   private _collectionNameValidator = inject(CollectionNameValidator);
 
+  /*private sería lo mismo que #*/ #bookService = inject(BookService);
+
   public collectionName = new FormControl('', {
     nonNullable: true,
     validators: [
@@ -66,8 +69,8 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
       invalidCharsValidator(REGEX_NO_INVALID_CHARS),
     ],
     // IMPORTANTE: al poner el validador asíncrono, debemos pasar el contexto de la clase del mismo validador para que pueda acceder a sus propiedades
-    asyncValidators: [this._collectionNameValidator.validate.bind(this._collectionNameValidator)], // asíncronos
-    updateOn: 'blur', // las validaciones solo se ejecutarán cuando el control pierda el foco
+    // asyncValidators: [this._collectionNameValidator.validate.bind(this._collectionNameValidator)], // asíncronos
+    updateOn: 'change', // las validaciones solo se ejecutarán cuando el control pierda el foco
   });
 
   constructor() {
@@ -106,6 +109,7 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
     }
 
     this.collectionCreated.emit(this.collectionName.value);
+    this.#bookService.createBookCollection(this.collectionName.value);
     this.collectionName.reset('');
   }
 
@@ -122,13 +126,13 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
 
   private _resetInput() {
     console.log('Resetting the form...');
-    this.collectionName.reset()
+    this.collectionName.reset();
     //setTimeout(() => {
-      //console.log('X secs delay...');
-      //this.inputName = 'default value';
-      //this.collectionName.setValue('inicio')
-      //this.collectionName.reset(); // reset() es más conveniente para que que los estados 'touched' y 'dirty' vuelvan a su estado inicial
-      //this._cdRef.markForCheck(); // ya no es necesario esto porque el FormControl se encarga de avisar a Angular de los cambios
+    //console.log('X secs delay...');
+    //this.inputName = 'default value';
+    //this.collectionName.setValue('inicio')
+    //this.collectionName.reset(); // reset() es más conveniente para que que los estados 'touched' y 'dirty' vuelvan a su estado inicial
+    //this._cdRef.markForCheck(); // ya no es necesario esto porque el FormControl se encarga de avisar a Angular de los cambios
     //}, 2000);
   }
 }
