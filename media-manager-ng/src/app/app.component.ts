@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NewMediaCollectionComponent } from './components/new-media-collection/new-media-collection.component';
 import { CustomButtonDirective } from './directives/custom-button.directive';
@@ -19,6 +19,7 @@ import {
 } from '@angular/common';
 import { NewBookComponent } from './components/new-book/new-book.component';
 import { BooksPageComponent } from './pages/books-page/books-page.component';
+import { AuthenticationService } from './services/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -51,10 +52,14 @@ export class AppComponent {
   showComponent = true;
   prueba = 'valor inicial desde app component';
 
+  private _authService = inject(AuthenticationService);
+
   constructor() {
     setTimeout(() => {
       this.prueba = 'otro valor dinamico';
     }, 3000);
+
+    this._authService.simulateLogin().subscribe();
   }
 
   public toggleComponent() {

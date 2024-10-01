@@ -97,5 +97,19 @@
       "duration": "201",
       "collectionId": "3"
     }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "username": "administrator",
+      "password": "1234",
+      "userType": "admin"
+    },
+    {
+      "id": "2",
+      "username": "some user",
+      "password": "abcd",
+      "userType": "readonly"
+    }
   ]
 }
