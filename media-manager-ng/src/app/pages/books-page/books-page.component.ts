@@ -34,16 +34,8 @@ export class BooksPageComponent implements OnInit {
     this._bookService.createBookCollection(name);
   }
 
-  removeBookCollection(identifier: string): void {
-    this._bookService.removeBookCollection(identifier);
-  }
-
   createBook(book: Book, collectionIdentifier: string): void {
     this._bookService.createBook(collectionIdentifier, book);
-  }
-
-  removeBook(collectionIdentifier: string, bookIdentifier: string) {
-    this._bookService.removeBook(collectionIdentifier, bookIdentifier);
   }
 
   reloadBookCollections(): void {
