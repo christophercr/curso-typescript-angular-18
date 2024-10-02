@@ -8,10 +8,7 @@ import type { Book } from '../models/book.model';
 export const bookCollectionsResolver: ResolveFn<Map<string, MediaCollection<Book>>> = (route, state) => {
   const bookService = inject(BookService);
 
-  return of(true).pipe(
-    tap(() => {
-      bookService.reloadBookCollections();
-    }),
+  return bookService.reloadBookCollections().pipe(
     delay(500),
     map(() => {
       const bookCollections = bookService.bookCollections;

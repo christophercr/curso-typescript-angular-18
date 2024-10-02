@@ -8,7 +8,7 @@ export type DeserializationFn<T extends Media> = (serializedCollection: any) => 
 export type TypeOfChange = 'create-collection-item' | 'remove-collection-item' | 'create-collection' | 'remove-collection';
 
 export interface MediaService<T extends Media> {
-  loadMediaCollection(identifier: string): Promise<MediaCollection<T>>;
+  loadMediaCollection(identifier: string): Observable<MediaCollection<T>>;
 
   saveMediaCollection(
     collection: Readonly<MediaCollection<T>>,
@@ -17,7 +17,7 @@ export interface MediaService<T extends Media> {
     collectionId?: string,
   ): Promise<void>;
 
-  getMediaCollectionIdentifiersList(): Promise<string[]>;
+  getMediaCollectionIdentifiersList(): Observable<string[]>;
 
   removeMediaCollection(identifier: string): Promise<void>;
 

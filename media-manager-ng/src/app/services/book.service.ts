@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MediaServiceImpl } from './media.service';
 import { Book } from '../models/book.model';
 import { MediaCollection } from '../models/media-collection.model';
+import { forkJoin, map, switchMap, type Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,15 +18,39 @@ export class BookService extends MediaServiceImpl<Book> {
     return this._bookCollections;
   }
 
-  reloadBookCollections(): void {
-    this.getMediaCollectionIdentifiersList().then((keys) => {
-      this._bookCollections.clear(); // clear the current state
-      keys.forEach((key) => {
-        this.loadMediaCollection(key).then((collection) => {
-          this._bookCollections.set(key, collection);
+  reloadBookCollections(): Observable<void> {
+    /*
+    return this.getMediaCollectionIdentifiersList().pipe(
+      map((keys) => {
+        this._bookCollections.clear(); // clear the current state
+        keys.forEach((key) => {
+          this.loadMediaCollection(key).then((collection) => {
+            this._bookCollections.set(key, collection);
+          });
         });
-      });
-    });
+        return;
+      }),
+    );
+    */
+
+    return this.getMediaCollectionIdentifiersList().pipe(
+      switchMap((keys) => {
+        const observablesArray$ = keys.map((item) => {
+          return this.loadMediaCollection(item);
+        });
+
+        return forkJoin(observablesArray$);
+      }),
+      map((collections) => {
+        this._bookCollections.clear(); // clear the current state
+
+        collections.forEach((collection) => {
+          this._bookCollections.set(collection.identifier, collection);
+        });
+
+        return;
+      }),
+    );
   }
 
   createBookCollection(name: string): void {

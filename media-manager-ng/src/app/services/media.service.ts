@@ -3,7 +3,7 @@ import { MediaCollection } from '../models/media-collection.model';
 import type { Media } from '../models/media.model';
 import { MEDIA_STORAGE_SERVICE, type MediaService, type TypeOfChange } from '../models/media-service.model';
 import { inject } from '@angular/core';
-import { catchError, lastValueFrom, map } from 'rxjs';
+import { catchError, lastValueFrom, map, type Observable } from 'rxjs';
 
 export class MediaServiceImpl<T extends Media> implements MediaService<T> {
   private readonly _mediaStorageService = inject(MEDIA_STORAGE_SERVICE);
@@ -16,10 +16,10 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
     return plainToClassFromExist<MediaCollection<T>, any>(new MediaCollection<T>(this._type), serializedCollection);
   };
 
-  loadMediaCollection(identifier: string): Promise<MediaCollection<T>> {
+  loadMediaCollection(identifier: string): Observable<MediaCollection<T>> {
     console.log(`Trying to load media collection with the following identifier: ${identifier}`);
 
-    return lastValueFrom(this._mediaStorageService.getItem(identifier, this.deserializeCollection, this._type.name));
+    return this._mediaStorageService.getItem(identifier, this.deserializeCollection, this._type.name);
   }
 
   saveMediaCollection(
@@ -36,19 +36,17 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
     return lastValueFrom(this._mediaStorageService.saveItem(collection, this._type.name, typeOfChange, collectionItemOrId, collectionId));
   }
 
-  getMediaCollectionIdentifiersList(): Promise<string[]> {
+  getMediaCollectionIdentifiersList(): Observable<string[]> {
     console.log('Retrieving the list of media collection identifiers');
 
-    return lastValueFrom(
-      this._mediaStorageService.getAllItems(this.deserializeCollection, this._type.name).pipe(
+    return this._mediaStorageService.getAllItems(this.deserializeCollection, this._type.name).pipe(
         map((collections) => {
           return collections.map((collection) => collection.identifier);
         }),
         catchError((err) => {
           throw new Error(err); // dejar pasar el error
         }),
-      ),
-    );
+      );
   }
 
   removeMediaCollection(identifier: string) {

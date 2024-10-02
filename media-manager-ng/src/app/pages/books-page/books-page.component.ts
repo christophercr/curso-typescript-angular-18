@@ -40,7 +40,7 @@ export class BooksPageComponent implements OnInit {
   }
 
   reloadBookCollections(): void {
-    this._bookService.reloadBookCollections();
+    this._bookService.reloadBookCollections().subscribe();
   }
 
   changeView(view: string) {
