@@ -13,7 +13,7 @@ export const routes: Routes = [
     component: HomePageComponent,
   },
   {
-    path: 'books',
+    path: 'books', // => localhost:3000/books
     // Mejora en performance: el código de este componente ya no se incluye en el main.js sino en un fichero JS aparte (chunk)
     loadComponent: () => import('./pages/books-page/books-page.component').then((module) => module.BooksPageComponent),
     canActivate: [adminGuard],
@@ -22,18 +22,23 @@ export const routes: Routes = [
     },
     children: [
       {
-        path: 'new-collection',
+        path: '',  // => localhost:3000/books/
+        pathMatch: 'full', // pero aquí le decimos que no añada '/'  => localhost:3000/books
+        redirectTo: 'collection-list',
+      },
+      {
+        path: 'new-collection',  // => localhost:3000/books/new-collection
         component: NewMediaCollectionComponent,
       },
       {
-        path: 'new-book',
+        path: 'new-book', // => localhost:3000/books/new-book
         component: NewBookComponent,
         resolve: {
           collections: bookCollectionsResolver,
         }
       },
       {
-        path: 'collection-list',
+        path: 'collection-list', // => localhost:3000/books/collection-list
         component: CollectionListComponent,
       },
     ],
