@@ -9,7 +9,7 @@ export const httpErrorInterceptor: HttpInterceptorFn = (request, next) => {
       console.warn('Response intercepted by HTTP Error interceptor!', event);
     }),
     catchError((error) => {
-      alert(`Http call to ${request.url} failed, try again later`);
+      // alert(`Http call to ${request.url} failed, try again later`);
       throw new Error(`HTTP Error interceptor: Http call failed due to error ${error.message}`);
     }),
   );

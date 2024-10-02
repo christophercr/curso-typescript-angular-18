@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import type { User, UserType } from '../models/user.model';
-import { map, type Observable } from 'rxjs';
+import { delay, map, retry, timer, type Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,11 @@ export class AuthenticationService {
         this._currentUser = this._getRandomUser(users);
         console.log('Simulating user login => user:', this._currentUser);
         return this._currentUser;
-      }),
+      }), 
+      retry({count:3,delay: (error: any, retryCount: number) => {
+        console.log('---- retry, intento ', retryCount, error);
+        return timer(Math.pow(retryCount,retryCount) * 1000); // retrasar 1seg más cada reintento
+      },})
     );
   }
 
