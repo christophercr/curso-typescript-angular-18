@@ -1,21 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, type Signal } from '@angular/core';
 import { MediaServiceImpl } from './media.service';
 import { Book } from '../models/book.model';
 import { MediaCollection } from '../models/media-collection.model';
-import { forkJoin, map, switchMap, type Observable } from 'rxjs';
+import { BehaviorSubject, delay, forkJoin, map, ReplaySubject, Subject, switchMap, type Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookService extends MediaServiceImpl<Book> {
   private _bookCollections: Map<string, MediaCollection<Book>> = new Map<string, MediaCollection<Book>>();
+  // usamos BehaviorSubject para que cualquiera que se suscriba, apenas lo haga, reciba el último valor emitido
+  private _bookCollectionsSubject$ = new BehaviorSubject<Map<string, MediaCollection<Book>>>(new Map());
+  // usamos una signal que por definición guarda el valor más reciente (último valor emitido)
+  private _bookCollectionsSignal = signal<Map<string, MediaCollection<Book>>>(new Map());
 
   constructor() {
     super(Book);
   }
 
-  get bookCollections(): Map<string, MediaCollection<Book>> {
-    return this._bookCollections;
+  get bookCollections$(): Observable<Map<string, MediaCollection<Book>>> {
+    return this._bookCollectionsSubject$.asObservable();
+  }
+
+  get bookCollectionsSignal(): Signal<Map<string, MediaCollection<Book>>> {
+    return this._bookCollectionsSignal.asReadonly();
   }
 
   reloadBookCollections(): Observable<void> {
@@ -34,6 +42,7 @@ export class BookService extends MediaServiceImpl<Book> {
     */
 
     return this.getMediaCollectionIdentifiersList().pipe(
+      delay(1000), // simular una respuesta lenta de nuestro servidor de API
       switchMap((keys) => {
         const observablesArray$ = keys.map((item) => {
           return this.loadMediaCollection(item);
@@ -47,6 +56,10 @@ export class BookService extends MediaServiceImpl<Book> {
         collections.forEach((collection) => {
           this._bookCollections.set(collection.identifier, collection);
         });
+        // en mundo observables
+        this._bookCollectionsSubject$.next(new Map(this._bookCollections)); // genero un nuevo mapa para cambiar la referencia de memória y lo emito
+        // en mundo signals
+        this._bookCollectionsSignal.set(new Map(this._bookCollections)); // genero un nuevo mapa para cambiar la referencia de memória y lo emito
 
         return;
       }),

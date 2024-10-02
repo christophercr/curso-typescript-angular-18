@@ -4,7 +4,7 @@ import { NewMediaCollectionComponent } from './components/new-media-collection/n
 import { NewBookComponent } from './components/new-book/new-book.component';
 import { CollectionListComponent } from './components/collection-list/collection-list.component';
 import { adminGuard } from './guards/admin.guard';
-import { bookCollectionsResolver } from './resolvers/book-collections.resolver';
+//import { bookCollectionsResolver } from './resolvers/book-collections.resolver';
 //import { BooksPageComponent } from './pages/books-page/books-page.component';
 
 export const routes: Routes = [
@@ -17,9 +17,9 @@ export const routes: Routes = [
     // Mejora en performance: el código de este componente ya no se incluye en el main.js sino en un fichero JS aparte (chunk)
     loadComponent: () => import('./pages/books-page/books-page.component').then((module) => module.BooksPageComponent),
     canActivate: [adminGuard],
-    resolve: {
+    /*resolve: {
       collections: bookCollectionsResolver,
-    },
+    },*/
     children: [
       {
         path: '',  // => localhost:3000/books/
@@ -33,9 +33,9 @@ export const routes: Routes = [
       {
         path: 'new-book', // => localhost:3000/books/new-book
         component: NewBookComponent,
-        resolve: {
+        /*resolve: {
           collections: bookCollectionsResolver,
-        }
+        }*/
       },
       {
         path: 'collection-list', // => localhost:3000/books/collection-list

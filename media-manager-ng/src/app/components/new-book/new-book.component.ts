@@ -1,15 +1,15 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, effect, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Genre } from '../../constants/genre.constants';
 import { Book } from '../../models/book.model';
-import { JsonPipe, KeyValuePipe } from '@angular/common';
+import { AsyncPipe, JsonPipe, KeyValuePipe } from '@angular/common';
 import { BookService } from '../../services/book.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-new-book',
   standalone: true,
-  imports: [ReactiveFormsModule, JsonPipe, KeyValuePipe],
+  imports: [ReactiveFormsModule, JsonPipe, KeyValuePipe, AsyncPipe],
   templateUrl: './new-book.component.html',
   styleUrl: './new-book.component.css',
 })
@@ -17,7 +17,7 @@ export class NewBookComponent implements OnInit {
   private readonly _bookService = inject(BookService);
   private readonly _currentRoute = inject(ActivatedRoute);
 
-  public bookCollections = this._bookService.bookCollections;
+  public bookCollectionsSignal = this._bookService.bookCollectionsSignal;
 
   @Output()
   created: EventEmitter<Book> = new EventEmitter<Book>();
@@ -32,6 +32,19 @@ export class NewBookComponent implements OnInit {
     collection: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
   genres: string[] = [];
+
+  constructor() {
+    // Es recomendable crear los effect en el constructor (aunque es posible crearlos en otro sitio si fuese necesario)
+    // https://angular.dev/guide/signals#injection-context
+    effect(() => {
+      const collectionsMap = this.bookCollectionsSignal();
+
+      if (collectionsMap.size > 0) {
+        const collections = Array.from(collectionsMap.values());
+        this.myForm.controls.collection.setValue(collections[0].identifier);
+      }
+    });
+  }
 
   ngOnInit() {
     for (const genreKey of Object.keys(Genre)) {
@@ -59,11 +72,18 @@ export class NewBookComponent implements OnInit {
       .subscribe();*/
 
     // Ahora podemos reemplazar el bloque de código de arriba porque ya podemos coger el listado de colecciones desde el resolver
-    this.bookCollections = this._currentRoute.snapshot.data['collections'];
+    /*this.bookCollections = this._currentRoute.snapshot.data['collections'];
     if (this.bookCollections.size > 0) {
       const collections = Array.from(this.bookCollections.values());
       this.myForm.controls.collection.setValue(collections[0].identifier);
-    }
+    }*/
+
+    /*this._bookService.bookCollections$.subscribe((bookCollections) => {
+      if (bookCollections.size > 0) {
+        const collections = Array.from(bookCollections.values());
+        this.myForm.controls.collection.setValue(collections[0].identifier);
+      }
+    });*/
 
     this.myForm.statusChanges.subscribe((status) => {
       console.log('myForm status changed: ', status);
