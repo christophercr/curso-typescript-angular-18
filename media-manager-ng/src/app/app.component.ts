@@ -20,6 +20,7 @@ import {
 import { NewBookComponent } from './components/new-book/new-book.component';
 import { BooksPageComponent } from './pages/books-page/books-page.component';
 import { AuthenticationService } from './services/authentication.service';
+import { UserType } from './models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -59,7 +60,7 @@ export class AppComponent {
       this.prueba = 'otro valor dinamico';
     }, 3000);
 
-    this._authService.simulateLogin().subscribe();
+    this._authService.simulateLogin(UserType.Admin).subscribe();
   }
 
   public toggleComponent() {

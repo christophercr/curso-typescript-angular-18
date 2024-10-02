@@ -14,7 +14,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   // IMPORTANTE: puede ser que cuando este guard se ejecute aún no se haya ejecutado nuestra lógica simulada de login
   // En ese caso la hacemos aquí
   if (authService.currentUser == null) {
-    currentUser$ = authService.simulateLogin();
+    currentUser$ = authService.simulateLogin(UserType.Admin);
   }
 
   return currentUser$.pipe(
