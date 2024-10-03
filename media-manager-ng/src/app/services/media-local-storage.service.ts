@@ -14,7 +14,7 @@ export class MediaLocalStorageService implements MediaStorageService {
   private readonly _stores = new Map<string, LocalForage>();
 
   constructor() {
-    console.log(`Initializing media local storage service`);
+    //console.log(`Initializing media local storage service`);
   }
 
   saveItem<T extends Media>(
@@ -25,13 +25,13 @@ export class MediaLocalStorageService implements MediaStorageService {
     collectionId?: string,
   ): Observable<void> {
     const serializedVersion = instanceToPlain(collection, { excludePrefixes: ['_'] });
-    console.log('Serialized version: ', serializedVersion);
+    //console.log('Serialized version: ', serializedVersion);
 
     const store = this._getStore(mediaType);
 
     return from(store.setItem(collection.identifier, serializedVersion)).pipe(
       tap((value) => {
-        console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
+        //console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
       }),
       map(() => {
         return undefined;
@@ -47,11 +47,11 @@ export class MediaLocalStorageService implements MediaStorageService {
     const store = this._getStore(mediaType);
     return from(store.getItem<any>(identifier)).pipe(
       map((value) => {
-        console.log('Found the collection: ', value);
+        //console.log('Found the collection: ', value);
 
         const retrievedCollection = deserializerFn(value);
 
-        console.log('Retrieved collection: ', retrievedCollection);
+        //console.log('Retrieved collection: ', retrievedCollection);
         return retrievedCollection;
       }),
       catchError((err) => {
@@ -83,7 +83,7 @@ export class MediaLocalStorageService implements MediaStorageService {
     const store = this._getStore(mediaType);
     return from(store.removeItem(identifier)).pipe(
       tap(() => {
-        console.log(`Removed the ${identifier} collection successfully!`);
+        //console.log(`Removed the ${identifier} collection successfully!`);
       }),
       catchError((err) => {
         console.error(`Failed to removed the ${identifier} collection`);

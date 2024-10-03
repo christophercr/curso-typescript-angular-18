@@ -86,11 +86,11 @@ export class NewBookComponent implements OnInit {
     });*/
 
     this.myForm.statusChanges.subscribe((status) => {
-      console.log('myForm status changed: ', status);
-      /*console.log('touched: ', this.myForm.touched);
-      console.log('untouched: ', this.myForm.untouched);
-      console.log('pristine: ', this.myForm.pristine);
-      console.log('dirty: ', this.myForm.dirty);*/
+      //console.log('myForm status changed: ', status);
+      /*//console.log('touched: ', this.myForm.touched);
+      //console.log('untouched: ', this.myForm.untouched);
+      //console.log('pristine: ', this.myForm.pristine);
+      //console.log('dirty: ', this.myForm.dirty);*/
     });
   }
 

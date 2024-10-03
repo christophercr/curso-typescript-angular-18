@@ -3,7 +3,6 @@ import { MediaServiceImpl } from './media.service';
 import { Book } from '../models/book.model';
 import { MediaCollection } from '../models/media-collection.model';
 import { BehaviorSubject, delay, forkJoin, map, ReplaySubject, Subject, switchMap, type Observable } from 'rxjs';
-import { error } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -46,17 +45,15 @@ export class BookService extends MediaServiceImpl<Book> {
       delay(1000), // simular una respuesta lenta de nuestro servidor de API
       switchMap((keys) => {
         const observablesArray$ = keys.map((item) => {
-          console.log(" switchmap Quiero ver el libro nuevo");
+          //console.log(" switchmap Quiero ver el libro nuevo");
           return this.loadMediaCollection(item);
-         
         });
 
         return forkJoin(observablesArray$);
-        
       }),
       map((collections) => {
         this._bookCollections.clear(); // clear the current state
-        console.log("Map Quiero ver el libro nuevo");
+        //console.log("Map Quiero ver el libro nuevo");
         collections.forEach((collection) => {
           this._bookCollections.set(collection.identifier, collection);
         });
@@ -75,25 +72,24 @@ export class BookService extends MediaServiceImpl<Book> {
   }
 
   async createBookCollection(name: string): Promise<void> {
-    console.log('Creating a new book collection: ', name);
+    //console.log('Creating a new book collection: ', name);
 
     const newBookCollection: MediaCollection<Book> = new MediaCollection<Book>(Book, name);
     this._bookCollections.set(newBookCollection.identifier, newBookCollection);
 
-    try{
+    try {
       await this.saveMediaCollection(newBookCollection);
-      console.log(
-        `New book collection called "${newBookCollection.name}" saved successfully. Identifier: `,
-        newBookCollection.identifier,
-      );
-
-    }catch(err){
+      //console.log(
+      //`New book collection called "${newBookCollection.name}" saved successfully. Identifier: `,
+      //newBookCollection.identifier,
+      //);
+    } catch (err) {
       this.displayErrorMessage(`Failed to save the new book collection called ${name}`);
     }
 
-   /* this.saveMediaCollection(newBookCollection)
+    /* this.saveMediaCollection(newBookCollection)
       .then(() => {
-        console.log(
+        //console.log(
           `New book collection called "${newBookCollection.name}" saved successfully. Identifier: `,
           newBookCollection.identifier,
         );
@@ -101,8 +97,6 @@ export class BookService extends MediaServiceImpl<Book> {
       .catch((_) => {
         this.displayErrorMessage(`Failed to save the new book collection called ${name}`);
       });*/
-
-
   }
 
   removeBookCollection(identifier: string): void {
@@ -113,7 +107,7 @@ export class BookService extends MediaServiceImpl<Book> {
     this._bookCollections.delete(identifier);
     this.removeMediaCollection(identifier)
       .then(() => {
-        console.log('Removed the collection with identifier: ', identifier);
+        //console.log('Removed the collection with identifier: ', identifier);
       })
       .catch((_) => {
         this.displayErrorMessage('Failed to remove the collection!');
@@ -125,7 +119,6 @@ export class BookService extends MediaServiceImpl<Book> {
       throw new Error('The collection identifier is required to create a new book!');
     }
 
-    
     if (!this._bookCollections.has(collectionIdentifier) || !this._bookCollections.get(collectionIdentifier)) {
       console.error('Tried to add a book to an unknown collection. Identifier: ', collectionIdentifier);
       this.displayErrorMessage('Failed to create the new book!');
@@ -139,13 +132,11 @@ export class BookService extends MediaServiceImpl<Book> {
 
     existingCollection.addMedia(book);
 
-    
-    try{
+    try {
       await this.saveMediaCollection(existingCollection, 'create-collection-item', book, collectionIdentifier);
-      console.log(`Book collection called "${existingCollection.name}" updated successfully.`);
-      
-    }catch(err){
-      console.error('Error while updating an existing book collection: ', error);
+      //console.log(`Book collection called "${existingCollection.name}" updated successfully.`);
+    } catch (err) {
+      console.error('Error while updating an existing book collection: ', err);
       this.displayErrorMessage(`Failed to update the existing book collection called ${existingCollection.name}`);
     }
   }
@@ -159,7 +150,7 @@ export class BookService extends MediaServiceImpl<Book> {
       throw new Error('The book identifier must be provided!');
     }
 
-    console.log(`Removing book ${bookIdentifier} which should be part of collection ${collectionIdentifier}`);
+    //console.log(`Removing book ${bookIdentifier} which should be part of collection ${collectionIdentifier}`);
 
     const existingCollection = this._bookCollections.get(collectionIdentifier);
     if (!existingCollection) {
@@ -170,7 +161,7 @@ export class BookService extends MediaServiceImpl<Book> {
 
     this.saveMediaCollection(existingCollection, 'remove-collection-item', bookIdentifier)
       .then(() => {
-        console.log(`Book collection called "${existingCollection.name}" updated successfully.`);
+        //console.log(`Book collection called "${existingCollection.name}" updated successfully.`);
       })
       .catch((error) => {
         console.error('Error while updating an existing book collection: ', error);

@@ -5,7 +5,7 @@ import { UserType } from '../models/user.model';
 import { map, of } from 'rxjs';
 
 export const adminGuard: CanActivateFn = (route, state) => {
-  console.log('--- adminGuard called!', route, state);
+  //console.log('--- adminGuard called!', route, state);
   const authService = inject(AuthenticationService);
   const router = inject(Router);
 

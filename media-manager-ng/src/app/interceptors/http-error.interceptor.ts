@@ -1,12 +1,12 @@
-import { HttpInterceptorFn } from "@angular/common/http";
-import { catchError, tap } from "rxjs";
+import { HttpInterceptorFn } from '@angular/common/http';
+import { catchError, tap } from 'rxjs';
 
 export const httpErrorInterceptor: HttpInterceptorFn = (request, next) => {
-  console.log('Request intercepted by HTTP Error inteceptor!', request);
+  //console.log('Request intercepted by HTTP Error inteceptor!', request);
   // gestión
   return next(request).pipe(
     tap((event) => {
-      console.warn('Response intercepted by HTTP Error interceptor!', event);
+      // console.warn('Response intercepted by HTTP Error interceptor!', event);
     }),
     catchError((error) => {
       // alert(`Http call to ${request.url} failed, try again later`);

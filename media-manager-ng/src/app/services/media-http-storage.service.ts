@@ -13,7 +13,7 @@ export class MediaHttpStorageService implements MediaStorageService {
   private readonly _http = inject(HttpClient);
 
   constructor() {
-    console.log(`Initializing media http storage service`);
+    //console.log(`Initializing media http storage service`);
   }
 
   saveItem<T extends Media>(
@@ -27,11 +27,11 @@ export class MediaHttpStorageService implements MediaStorageService {
 
     if (typeOfChange === 'create-collection') {
       const serializedVersion = instanceToPlain(collection, { excludePrefixes: ['_'] });
-      console.log('Serialized version: ', serializedVersion);
+      //console.log('Serialized version: ', serializedVersion);
 
       return this._http.post<void>(`http://localhost:3000/${endpoint}`, serializedVersion).pipe(
         tap((value) => {
-          console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
+          //console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
         }),
         catchError((err) => {
           console.error(`Failed to save the ${collection.name} collection with identifier ${collection.identifier}. Error: ${err}`);
@@ -44,11 +44,11 @@ export class MediaHttpStorageService implements MediaStorageService {
       endpoint = `${mediaType.toLowerCase()}s`;
       const serializedVersion = instanceToPlain(collectionItemOrId, { excludePrefixes: ['_'] });
       serializedVersion['collectionId'] = collectionId;
-      console.log('Serialized version: ', serializedVersion);
+      //console.log('Serialized version: ', serializedVersion);
 
       return this._http.post<void>(`http://localhost:3000/${endpoint}`, serializedVersion).pipe(
         tap((value) => {
-          console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
+          //console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
         }),
         catchError((err) => {
           console.error(`Failed to save the ${collection.name} collection with identifier ${collection.identifier}. Error: ${err}`);
@@ -62,9 +62,9 @@ export class MediaHttpStorageService implements MediaStorageService {
 
       return this._http.delete<void>(`http://localhost:3000/${endpoint}/${collectionItemOrId}`).pipe(
         tap((value) => {
-          console.log(
-            `Saved the item with id ${collectionItemOrId} successfully from collection with identifier ${collection.identifier}!`,
-          );
+          //console.log(
+            //`Saved the item with id ${collectionItemOrId} successfully from collection with identifier ${collection.identifier}!`,
+          //);
         }),
         catchError((err) => {
           console.error(
@@ -82,7 +82,7 @@ export class MediaHttpStorageService implements MediaStorageService {
     const endpoint = `collections/${identifier}?_embed=${mediaType.toLowerCase()}s`;
     return this._http.get(`http://localhost:3000/${endpoint}`).pipe(
       map((value) => {
-        console.log('Found the collection: ', value);
+        //console.log('Found the collection: ', value);
 
         const normalizedCollectionItems = (value as any)['books'].map((item: any) => {
           const { name, description, pictureLocation, genre, author, numberOfPages, id: identifier } = item; // TODO: definir interface para respuesta de API
@@ -95,7 +95,7 @@ export class MediaHttpStorageService implements MediaStorageService {
         // const normalizedCollection = { ...value, identifier: (value as any)['id'], collection: normalizedCollectionItems }; // TODO: definir interface para respuesta de API
         const retrievedCollection = deserializerFn(normalizedCollection);
 
-        console.log('Retrieved collection: ', retrievedCollection);
+        //console.log('Retrieved collection: ', retrievedCollection);
         return retrievedCollection;
       }),
       catchError((err) => {
@@ -115,7 +115,7 @@ export class MediaHttpStorageService implements MediaStorageService {
           return deserializerFn(normalizedCollection);
         });
 
-        console.log('Retrieved collection: ', retrievedCollections);
+        //console.log('Retrieved collection: ', retrievedCollections);
         return retrievedCollections;
       }),
       catchError((err) => {
@@ -132,7 +132,7 @@ export class MediaHttpStorageService implements MediaStorageService {
     const endpoint = `collections`;
     return this._http.delete<void>(`http://localhost:3000/${endpoint}/${identifier}`).pipe(
       tap(() => {
-        console.log(`Removed the ${identifier} collection successfully!`);
+        //console.log(`Removed the ${identifier} collection successfully!`);
       }),
       catchError((err) => {
         console.error(`Failed to removed the ${identifier} collection`);

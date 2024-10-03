@@ -43,19 +43,19 @@ export class BooksPageComponent implements OnInit {
     this._router.navigate([view], { relativeTo: this._currentRoute });
   }
   onRouteActivated(component: CollectionListComponent | NewMediaCollectionComponent | NewBookComponent) {
-    console.log('------ route activated', component);
+    //console.log('------ route activated', component);
     if (component instanceof NewBookComponent) {
       component.created.pipe(delay(3000)).subscribe((book) => {
         //delay();
         this._bookService.reloadBookCollections().subscribe({
           next: (valor) => {
-            console.log('El valor de next: ' + valor);
+            //console.log('El valor de next: ' + valor);
           },
           error: (err) => {
-            console.log('El valor de error: ' + err);
+            //console.log('El valor de error: ' + err);
           },
           complete: () => {
-            console.log('El valor de complete');
+            //console.log('El valor de complete');
           },
         });
         this._router.navigate(['collection-list'], { relativeTo: this._currentRoute });
@@ -64,13 +64,13 @@ export class BooksPageComponent implements OnInit {
       component.collectionCreated.subscribe((collectionName) => {
         this._bookService.reloadBookCollections().subscribe({
           next: (valor) => {
-            console.log('El valor de next2: ' + valor);
+            //console.log('El valor de next2: ' + valor);
           },
           error: (err) => {
-            console.log('El valor de error2: ' + err);
+            //console.log('El valor de error2: ' + err);
           },
           complete: () => {
-            console.log('El valor de complete2');
+            //console.log('El valor de complete2');
           },
         });
         this._router.navigate(['collection-list'], { relativeTo: this._currentRoute });

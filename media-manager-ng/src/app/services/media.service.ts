@@ -9,7 +9,7 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
   private readonly _mediaStorageService = inject(MEDIA_STORAGE_SERVICE);
 
   constructor(private _type: Function) {
-    console.log(`Initializing media service for ${_type.name}`);
+    //console.log(`Initializing media service for ${_type.name}`);
   }
 
   deserializeCollection = (serializedCollection: any): MediaCollection<T> => {
@@ -17,7 +17,7 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
   };
 
   loadMediaCollection(identifier: string): Observable<MediaCollection<T>> {
-    console.log(`Trying to load media collection with the following identifier: ${identifier}`);
+    //console.log(`Trying to load media collection with the following identifier: ${identifier}`);
 
     return this._mediaStorageService.getItem(identifier, this.deserializeCollection, this._type.name);
   }
@@ -32,12 +32,12 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
       throw new Error('The list cannot be null or undefined!');
     }
 
-    console.log(`Saving media collection with the following name ${collection.name}`);
+    //console.log(`Saving media collection with the following name ${collection.name}`);
     return lastValueFrom(this._mediaStorageService.saveItem(collection, this._type.name, typeOfChange, collectionItemOrId, collectionId));
   }
 
   getMediaCollectionIdentifiersList(): Observable<string[]> {
-    console.log('Retrieving the list of media collection identifiers');
+    //console.log('Retrieving the list of media collection identifiers');
 
     return this._mediaStorageService.getAllItems(this.deserializeCollection, this._type.name).pipe(
         map((collections) => {
@@ -54,7 +54,7 @@ export class MediaServiceImpl<T extends Media> implements MediaService<T> {
       throw new Error('The identifier must be provided!');
     }
 
-    console.log(`Removing media collection with the following identifier ${identifier}`);
+    //console.log(`Removing media collection with the following identifier ${identifier}`);
 
     return lastValueFrom(this._mediaStorageService.deleteItem(identifier, this._type.name));
   }

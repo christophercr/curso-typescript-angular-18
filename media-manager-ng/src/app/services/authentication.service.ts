@@ -23,11 +23,11 @@ export class AuthenticationService {
         }
 
         this._currentUser = this._getRandomUser(users);
-        console.log('Simulating user login => user:', this._currentUser);
+        //console.log('Simulating user login => user:', this._currentUser);
         return this._currentUser;
       }), 
       retry({count:3,delay: (error: any, retryCount: number) => {
-        console.log('---- retry, intento ', retryCount, error);
+        //console.log('---- retry, intento ', retryCount, error);
         return timer(Math.pow(retryCount,retryCount) * 1000); // retrasar 1seg más cada reintento
       },})
     );

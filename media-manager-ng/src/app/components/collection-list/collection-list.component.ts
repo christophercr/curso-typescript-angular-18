@@ -17,13 +17,13 @@ export class CollectionListComponent {
   constructor(){
     this.bookCollections$.subscribe({
       next: (valor) => {
-        console.log('El valor de next3: ', valor.entries() )
+        //console.log('El valor de next3: ', valor.entries() )
       },
       error: (err) => {
-        console.log('El valor de error3: ' + err);
+        //console.log('El valor de error3: ' + err);
       },
       complete: () => {
-        console.log('El valor de complete3');
+        //console.log('El valor de complete3');
       },
     });
   }

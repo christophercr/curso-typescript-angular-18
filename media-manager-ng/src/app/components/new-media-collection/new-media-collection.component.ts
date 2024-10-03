@@ -75,35 +75,35 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
 
   constructor() {
     this.collectionName.statusChanges.subscribe((status) => {
-      console.log('Collection name status changed: ', status);
-      /*console.log('touched: ', this.collectionName.touched);
-      console.log('untouched: ', this.collectionName.untouched);
-      console.log('pristine: ', this.collectionName.pristine);
-      console.log('dirty: ', this.collectionName.dirty);*/
+      //console.log('Collection name status changed: ', status);
+      /*//console.log('touched: ', this.collectionName.touched);
+      //console.log('untouched: ', this.collectionName.untouched);
+      //console.log('pristine: ', this.collectionName.pristine);
+      //console.log('dirty: ', this.collectionName.dirty);*/
     });
   }
 
   public ngOnInit() {
-    //console.log('ngOnInit called!');
+    ////console.log('ngOnInit called!');
   }
 
   public ngAfterViewInit(): void {
-    //console.log('ngAfterViewInit called!');
+    ////console.log('ngAfterViewInit called!');
     /*if (this.nameInput) {
       this.nameInput.nativeElement.value = this.name;
     }*/
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    //console.log('ngOnChanges called!', changes);
+    ////console.log('ngOnChanges called!', changes);
   }
 
   public ngOnDestroy() {
-    //console.log('ngOnDestroy called!');
+    ////console.log('ngOnDestroy called!');
   }
 
   public createBookCollection() {
-    //console.log('Creating a new book collection...');
+    ////console.log('Creating a new book collection...');
     if (!this.collectionName.valid) {
       console.warn('dato invalido', this.collectionName.value);
     }
@@ -116,21 +116,21 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
   }
 
   public reloadBookCollections() {
-    console.log('Reloading book collections...');
+    //console.log('Reloading book collections...');
     this.reloadClicked.emit('some data');
     this._resetInput();
   }
 
   /*public onNameChange(newValue: string) {
     this.inputName = newValue;
-    console.log('Name changed:', this.inputName);
+    //console.log('Name changed:', this.inputName);
   }*/
 
   private _resetInput() {
-    console.log('Resetting the form...');
+    //console.log('Resetting the form...');
     this.collectionName.reset();
     //setTimeout(() => {
-    //console.log('X secs delay...');
+    ////console.log('X secs delay...');
     //this.inputName = 'default value';
     //this.collectionName.setValue('inicio')
     //this.collectionName.reset(); // reset() es más conveniente para que que los estados 'touched' y 'dirty' vuelvan a su estado inicial
