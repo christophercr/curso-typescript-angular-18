@@ -13,7 +13,9 @@
     "mock-server": "json-server --watch ./mock/db.json --port 3000",
     "mock-server:users": "json-server --watch ./mock/db.json --port 5000",
     "mock-server:books": "json-server --watch ./mock/db.json --port 3000",
-    "mock-server:prod": "json-server --watch ./mock/db.json --port 2000"
+    "mock-server:prod": "json-server --watch ./mock/db.json --port 2000",
+    "build:prod": "ng build --configuration production",
+    "serve:prod": "http-server ./dist/media-manager-ng/browser --p 4200"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +40,7 @@
     "@angular/cli": "^18.2.5",
     "@angular/compiler-cli": "^18.2.5",
     "@types/jasmine": "~5.1.0",
+    "http-server": "^14.1.1",
     "jasmine-core": "~5.2.0",
     "json-server": "^0.17.4",
     "karma": "~6.4.0",

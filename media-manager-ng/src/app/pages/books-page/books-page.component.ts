@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+// import "reflect-metadata"; // Ya no lo importamos aquí para evitar que Angular optimize ese código y rompa en prod. Lo añadiremos a nuestros polyfills
 import { Component, inject, type OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NewBookComponent } from '../../components/new-book/new-book.component';
