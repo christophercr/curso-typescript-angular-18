@@ -5,12 +5,19 @@ import type { MediaCollection } from '../models/media-collection.model';
 import { instanceToPlain } from 'class-transformer';
 import type { Media } from '../models/media.model';
 import { catchError, lastValueFrom, map, of, tap, type Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class MediaHttpStorageService implements MediaStorageService {
   private readonly _http = inject(HttpClient);
+
+  private readonly _apiUrls: Record<string, string> = {
+    'books': environment.booksApiUrl,
+    'movies': environment.moviesApiUrl,
+  };
 
   constructor() {
     //console.log(`Initializing media http storage service`);
@@ -29,7 +36,7 @@ export class MediaHttpStorageService implements MediaStorageService {
       const serializedVersion = instanceToPlain(collection, { excludePrefixes: ['_'] });
       //console.log('Serialized version: ', serializedVersion);
 
-      return this._http.post<void>(`http://localhost:3000/${endpoint}`, serializedVersion).pipe(
+      return this._http.post<void>(`${this._getUrlApi(mediaType)}${endpoint}`, serializedVersion).pipe(
         tap((value) => {
           //console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
         }),
@@ -46,7 +53,7 @@ export class MediaHttpStorageService implements MediaStorageService {
       serializedVersion['collectionId'] = collectionId;
       //console.log('Serialized version: ', serializedVersion);
 
-      return this._http.post<void>(`http://localhost:3000/${endpoint}`, serializedVersion).pipe(
+      return this._http.post<void>(`${this._getUrlApi(mediaType)}${endpoint}`, serializedVersion).pipe(
         tap((value) => {
           //console.log(`Saved the ${collection.name} collection successfully! Saved value: `, value);
         }),
@@ -60,7 +67,7 @@ export class MediaHttpStorageService implements MediaStorageService {
     if (typeOfChange === 'remove-collection-item' && collectionItemOrId) {
       endpoint = `${mediaType.toLowerCase()}s`;
 
-      return this._http.delete<void>(`http://localhost:3000/${endpoint}/${collectionItemOrId}`).pipe(
+      return this._http.delete<void>(`${this._getUrlApi(mediaType)}${endpoint}/${collectionItemOrId}`).pipe(
         tap((value) => {
           //console.log(
             //`Saved the item with id ${collectionItemOrId} successfully from collection with identifier ${collection.identifier}!`,
@@ -80,7 +87,7 @@ export class MediaHttpStorageService implements MediaStorageService {
 
   getItem<T extends Media>(identifier: string, deserializerFn: DeserializationFn<T>, mediaType: string): Observable<MediaCollection<T>> {
     const endpoint = `collections/${identifier}?_embed=${mediaType.toLowerCase()}s`;
-    return this._http.get(`http://localhost:3000/${endpoint}`).pipe(
+    return this._http.get(`${this._getUrlApi(mediaType)}${endpoint}`).pipe(
       map((value) => {
         //console.log('Found the collection: ', value);
 
@@ -106,7 +113,7 @@ export class MediaHttpStorageService implements MediaStorageService {
 
   getAllItems<T extends Media>(deserializerFn: DeserializationFn<T>, mediaType: string): Observable<MediaCollection<T>[]> {
     const endpoint = `collections?type=${mediaType.toLowerCase()}`;
-    return this._http.get<any[]>(`http://localhost:3000/${endpoint}`).pipe(
+    return this._http.get<any[]>(`${this._getUrlApi(mediaType)}${endpoint}`).pipe(
       map((collectionsArray) => {
         const retrievedCollections = collectionsArray.map((item) => {
           // const {id: identifier, name, type} = item; // TODO: definir interface para 'value'
@@ -130,7 +137,7 @@ export class MediaHttpStorageService implements MediaStorageService {
    */
   deleteItem(identifier: string, mediaType: string): Observable<void> {
     const endpoint = `collections`;
-    return this._http.delete<void>(`http://localhost:3000/${endpoint}/${identifier}`).pipe(
+    return this._http.delete<void>(`${this._getUrlApi(mediaType)}${endpoint}/${identifier}`).pipe(
       tap(() => {
         //console.log(`Removed the ${identifier} collection successfully!`);
       }),
@@ -140,4 +147,10 @@ export class MediaHttpStorageService implements MediaStorageService {
       }),
     );
   }
+
+  private _getUrlApi(mediaType: string): string {
+    const pluralMediaType = `${mediaType.toLowerCase()}s`; // pluralizamos el media type: 'book' -> 'books'
+    return this._apiUrls[pluralMediaType];
+  }
+
 }

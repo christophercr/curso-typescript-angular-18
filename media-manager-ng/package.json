@@ -10,7 +10,10 @@
     "format": "git diff --cached --name-only | xargs prettier --ignore-unknown --write",
     "format:all": "prettier --ignore-unknown --write .",
     "format:verify": "prettier --ignore-unknown --check .",
-    "mock-server": "json-server --watch ./mock/db.json --port 3000"
+    "mock-server": "json-server --watch ./mock/db.json --port 3000",
+    "mock-server:users": "json-server --watch ./mock/db.json --port 5000",
+    "mock-server:books": "json-server --watch ./mock/db.json --port 3000",
+    "mock-server:prod": "json-server --watch ./mock/db.json --port 2000"
   },
   "private": true,
   "dependencies": {
