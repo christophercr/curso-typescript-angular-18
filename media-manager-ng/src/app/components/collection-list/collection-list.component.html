@@ -1,6 +1,6 @@
 <h3>Book Colletions!</h3>
 <cdk-accordion class="example-accordion">
-  @for (bookCollection of bookCollections$ | async | keyvalue; track bookCollection.value.identifier; let index = $index) {
+  @for (bookCollection of bookCollectionsSignal() | keyvalue; track bookCollection.value.identifier; let index = $index) {
     <cdk-accordion-item
       #accordionItem="cdkAccordionItem"
       class="example-accordion-item"

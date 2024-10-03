@@ -39,10 +39,6 @@ export class BooksPageComponent implements OnInit {
     this._bookService.createBook(collectionIdentifier, book);
   }
 
-  reloadBookCollections(): void {
-    this._bookService.reloadBookCollections().subscribe();
-  }
-
   changeView(view: string) {
     this._router.navigate([view], { relativeTo: this._currentRoute });
   }
@@ -51,10 +47,32 @@ export class BooksPageComponent implements OnInit {
     if (component instanceof NewBookComponent) {
       component.created.pipe(delay(3000)).subscribe((book) => {
         //delay();
+        this._bookService.reloadBookCollections().subscribe({
+          next: (valor) => {
+            console.log('El valor de next: ' + valor);
+          },
+          error: (err) => {
+            console.log('El valor de error: ' + err);
+          },
+          complete: () => {
+            console.log('El valor de complete');
+          },
+        });
         this._router.navigate(['collection-list'], { relativeTo: this._currentRoute });
       });
     } else if (component instanceof NewMediaCollectionComponent) {
       component.collectionCreated.subscribe((collectionName) => {
+        this._bookService.reloadBookCollections().subscribe({
+          next: (valor) => {
+            console.log('El valor de next2: ' + valor);
+          },
+          error: (err) => {
+            console.log('El valor de error2: ' + err);
+          },
+          complete: () => {
+            console.log('El valor de complete2');
+          },
+        });
         this._router.navigate(['collection-list'], { relativeTo: this._currentRoute });
       });
     } else {

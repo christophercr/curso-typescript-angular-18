@@ -107,10 +107,12 @@ export class NewMediaCollectionComponent implements OnInit, OnDestroy, AfterView
     if (!this.collectionName.valid) {
       console.warn('dato invalido', this.collectionName.value);
     }
+    
+    this.#bookService.createBookCollection(this.collectionName.value).then(()=> {
+      this.collectionCreated.emit(this.collectionName.value);
+      this.collectionName.reset('');
+    });
 
-    this.collectionCreated.emit(this.collectionName.value);
-    this.#bookService.createBookCollection(this.collectionName.value);
-    this.collectionName.reset('');
   }
 
   public reloadBookCollections() {

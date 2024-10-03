@@ -111,9 +111,11 @@ export class NewBookComponent implements OnInit {
         rawValue.numberOfPages,
       );
 
-      this.created.emit(bookToCreate);
-      this._bookService.createBook(this.myForm.controls.collection.value, bookToCreate);
-      this.myForm.reset();
+      this._bookService.createBook(this.myForm.controls.collection.value, bookToCreate).then(() =>{
+        this.created.emit(bookToCreate);
+        this.myForm.reset();
+      });
+
     }
   }
 }

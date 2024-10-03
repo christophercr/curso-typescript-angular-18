@@ -63,6 +63,27 @@
       "name": "pepe4",
       "type": "book",
       "collection": []
+    },
+    {
+      "identifier": "4z2xrvlzn",
+      "id": "4z2xrvlzn",
+      "name": "Mi cunchis",
+      "type": "book",
+      "collection": []
+    },
+    {
+      "identifier": "vlbeujkfu",
+      "id": "vlbeujkfu",
+      "name": "Mi Carasui",
+      "type": "book",
+      "collection": []
+    },
+    {
+      "identifier": "y6n01qt5c",
+      "id": "y6n01qt5c",
+      "name": "Promesas vacías",
+      "type": "book",
+      "collection": []
     }
   ],
   "photos": [
@@ -83,6 +104,17 @@
       "genre": "Romance",
       "author": "John Doe",
       "numberOfPages": 154,
+      "collectionId": "1"
+    },
+    {
+      "identifier": "7y62f5t5z",
+      "name": "promesas llenas",
+      "description": "",
+      "pictureLocation": "",
+      "genre": "Thriller",
+      "id": "7y62f5t5z",
+      "author": "Jorge",
+      "numberOfPages": 150,
       "collectionId": "1"
     }
   ],

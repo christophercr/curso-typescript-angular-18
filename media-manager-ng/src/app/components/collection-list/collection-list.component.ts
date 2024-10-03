@@ -13,10 +13,25 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop'
   styleUrl: './collection-list.component.css'
 })
 export class CollectionListComponent {
+
+  constructor(){
+    this.bookCollections$.subscribe({
+      next: (valor) => {
+        console.log('El valor de next3: ', valor.entries() )
+      },
+      error: (err) => {
+        console.log('El valor de error3: ' + err);
+      },
+      complete: () => {
+        console.log('El valor de complete3');
+      },
+    });
+  }
  
   private readonly _bookService = inject(BookService);
 
   public bookCollections$ = this._bookService.bookCollections$;
+
   public bookCollectionsSignal = toSignal(this._bookService.bookCollections$);
   
   // alternativamente, se puede convertir Singal en Observable y viceversa
