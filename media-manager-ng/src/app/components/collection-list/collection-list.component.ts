@@ -3,7 +3,7 @@ import { BookService } from '../../services/book.service';
 import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import { BookListComponent } from '../book-list/book-list.component';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop'
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-collection-list',
@@ -15,7 +15,9 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop'
 export class CollectionListComponent {
 
   constructor(){
-    this.bookCollections$.subscribe({
+    this.bookCollections$.pipe(
+      takeUntilDestroyed(), // BUENA PRÁCTICA: asegura que nos desuscribirnos del observable cuando el componente se destruye!
+    ).subscribe({
       next: (valor) => {
         //console.log('El valor de next3: ', valor.entries() )
       },

@@ -1,11 +1,11 @@
-import { Injectable, signal, type Signal } from '@angular/core';
+import { computed, Injectable, signal, type Signal } from '@angular/core';
 import { MediaServiceImpl } from './media.service';
 import { Book } from '../models/book.model';
 import { MediaCollection } from '../models/media-collection.model';
 import { BehaviorSubject, delay, forkJoin, map, ReplaySubject, Subject, switchMap, type Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root', // singleton en toda la aplicacion
 })
 export class BookService extends MediaServiceImpl<Book> {
   public mediaTypeName = 'book';
@@ -16,8 +16,38 @@ export class BookService extends MediaServiceImpl<Book> {
   // usamos una signal que por definición guarda el valor más reciente (último valor emitido)
   private _bookCollectionsSignal = signal<Map<string, MediaCollection<Book>>>(new Map());
 
+  // signal computed (calcula su valor dependiendo de otras signals)
+  private _bookCollectionsCount = computed(() => this._bookCollectionsSignal().size);
+
+  // signal computed (calcula su valor dependiendo de otras signals)
+  private _nonEmptyBookCollections = computed(() => {
+    const count = this._bookCollectionsCount();
+
+    if (count > 0) {
+      // creamos un map donde añadiremos sólo las colecciones que tengan elementos, las vacías las descartamos
+      const mapWithNonEmptyCollections = new Map<string, MediaCollection<Book>>();
+
+      this._bookCollectionsSignal().forEach((collection, identifier) => {
+        if (collection.collection.length > 0) {
+          mapWithNonEmptyCollections.set(identifier, collection);
+        }
+      });
+
+      return mapWithNonEmptyCollections;
+    }
+
+    return new Map<string, MediaCollection<Book>>();
+  });
+
   constructor() {
     super(Book);
+  }
+
+  // IMPORTANTE: sólo tiene sentido este hook para servicios que se pueden destruir (servicios acoplados a un componente, NO PARA SERVICIOS ROOT)
+  ngOnDestroy() {
+    // BUENA PRÁCTICA: "cerramos" el observable para evitar leaks de memória
+    // cualquier usuario que se haya suscrito se le invocará su handler "complete()" (sí es que lo había definido)
+    this._bookCollectionsSubject$.complete();
   }
 
   get bookCollections$(): Observable<Map<string, MediaCollection<Book>>> {
