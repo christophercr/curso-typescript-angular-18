@@ -8,6 +8,8 @@ import { BehaviorSubject, delay, forkJoin, map, ReplaySubject, Subject, switchMa
   providedIn: 'root',
 })
 export class BookService extends MediaServiceImpl<Book> {
+  public mediaTypeName = 'book';
+
   private _bookCollections: Map<string, MediaCollection<Book>> = new Map<string, MediaCollection<Book>>();
   // usamos BehaviorSubject para que cualquiera que se suscriba, apenas lo haga, reciba el último valor emitido
   private _bookCollectionsSubject$ = new BehaviorSubject<Map<string, MediaCollection<Book>>>(new Map());
@@ -74,7 +76,7 @@ export class BookService extends MediaServiceImpl<Book> {
   async createBookCollection(name: string): Promise<void> {
     //console.log('Creating a new book collection: ', name);
 
-    const newBookCollection: MediaCollection<Book> = new MediaCollection<Book>(Book, name);
+    const newBookCollection: MediaCollection<Book> = new MediaCollection<Book>(Book, 'book', name);
     this._bookCollections.set(newBookCollection.identifier, newBookCollection);
 
     try {
