@@ -7,21 +7,22 @@
 // • Identificar cuando sucede el chequeo de tipos
 // • Despues analizaremos el resultado de la transpilación
 
-export function exercise1_1() {
+
+export function exercise1_1(): void {
   // ======== Ejercicio 1.1 ========
   // TODO:
   // • Añadir las anotaciones de tipos (ser lo más explícito posible)
   // • Corregir los errores (si aplica)
 
-  const integer = 6;
-  const float = 6.66;
-  const hex = 0xf00d;
-  const binary = 0b1010011010;
-  const octal = 0o744;
-  const negZero = -0;
-  const actuallyNumber = NaN;
-  const largestNumber = Number.MAX_VALUE;
-  const mostBiglyNumber = Infinity;
+  const integer : number = 6;
+  const float : number = 6.66;
+  const hex : string = "0xf00d";
+  const binary : string = "0b1010011010";
+  const octal : string = "0o744";
+  const negZero : number = -0;
+  const actuallyNumber : unknown = NaN;
+  const largestNumber : number = Number.MAX_VALUE;
+  const mostBiglyNumber : number= Infinity;
 
   const members: any[] = [
     integer,
@@ -35,21 +36,32 @@ export function exercise1_1() {
     mostBiglyNumber
   ];
 
-  members[0] = '12345';
+  members[0] = 12345;
+  members[1] = 1.1;
+  members[2] = "0xf00d";
+  members[3] = "0b1010011010";
+  members[4] = "0o744";
+  members[5] =  -0;
+  members[5] =  NaN;
+  members[6] =  Number.MAX_VALUE;
+
 
   console.log('[Ejercicio 1.1]', members);
 }
-
-export function exercise1_2() {
+export function exercise1_2(): void {
   // ======== Ejercicio 1.2 ========
   // TODO:
   // • Añadir las anotaciones de tipos (ser lo más explícito posible)
   // • Corregir los errores (si aplica)
 
-  const sequence = Array.from(Array(10).keys());
-  const animals = ['pangolin', 'aardvark', 'echidna', 'binturong'];
-  const stringsAndNumbers = [1, 'one', 2, 'two', 3, 'three'];
-  const allMyArrays = [sequence, animals, stringsAndNumbers];
+  const sequence: number [] = Array.from(Array(10).keys());
+  const animals : string[] = ['pangolin', 'aardvark', 'echidna', 'binturong'];
+ 
+  //const stringsAndNumbers: (string | number) [] = [1, 'one', 2, 'two', 3, 'three'];
+  const stringsAndNumbers: [number, string, number, string, number, string] = [1, 'one', 2, 'two', 3, 'three'];
+ 
+  //const allMyArrays : (string | number) [][]  = [sequence, animals, stringsAndNumbers];
+  const allMyArrays :  [number[], string[], (string | number)[]]  = [sequence, animals, stringsAndNumbers];
 
   console.log('[Ejercicio 1.2]', allMyArrays);
 }
@@ -63,10 +75,10 @@ export function exercise1_3() {
   // Queremos representar un inventoryItem como una estructura en donde
   // el primer elemento es el su nombre y el segundo es la cantidad
 
-  const inventoryItem = ['table', 11];
+  const inventoryItem : [string, number] = ['table', 11];
 
   // despues lo "destructuramos"
-  const [name, qty] = inventoryItem;
+  const [name, qty] : [string, number] = inventoryItem;
 
   const msg = addInventory(name, qty);
 
@@ -95,7 +107,7 @@ export function exercise1_4() {
 
   console.log("[Ejercicio 1.4] My T-Shirt type: ", myTShirtType);
 
-  const nameOfShirtType: string = TShirtType[myTShirtType];
+  const nameOfShirtType: string = myTShirtType;
 
   console.log("[Ejercicio 1.4] Real name of T-shirt type", nameOfShirtType);
 }
